@@ -13,6 +13,7 @@ module.exports = {
     static: path.resolve(__dirname, 'dist'),
     port: 3000,
   },
+  target: 'electron-renderer',
   module: {
     rules: [
       {

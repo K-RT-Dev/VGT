@@ -10,8 +10,8 @@ function createMainWindow() {
     width: 1100,
     height: 800,
     show: false,
-    transparent: true, //OJO
-    frame: false, //OJO
+    //transparent: true, //OJO
+    //frame: false, //OJO
     icon: `${__dirname}/../assets/ghost.png`,
     webPreferences: {
       nodeIntegration: true,
@@ -23,7 +23,7 @@ function createMainWindow() {
   //Usamos hash para indicar la ruta que debe ser ejecutada en el contenido
   //Ojo que en el path.join usamos ".." para llegar correctamente al .html
   let indexPath;
-  if (process.argv.indexOf('--noDevServer') === -1) {
+  if (process.env.NODE_ENV === 'development') {
     indexPath = url.format({
       protocol: 'http:',
       host: 'localhost:3000',

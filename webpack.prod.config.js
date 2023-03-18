@@ -40,6 +40,7 @@ module.exports = {
     }),
     new HtmlWebpackPlugin(),
   ],
+  target: 'electron-renderer',
   optimization: {
     minimize: true,
     splitChunks: {

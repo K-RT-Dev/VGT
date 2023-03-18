@@ -1,0 +1,24 @@
+body {
+	margin: 0px;
+}
+
+.content-padding {
+	padding: 10px;
+}
+
+#global {
+  height: 100vh;
+}
+#header {
+  height: 45px;
+  background-color: orange;
+}
+#content {	
+  height: calc(100% - (45px + 30px));
+  overflow-y: auto;
+}
+#footer {
+  height: 30px;
+  background-color: rgb(0 21 41);
+  color: white;
+}

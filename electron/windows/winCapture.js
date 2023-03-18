@@ -7,7 +7,7 @@ const { inDevMode } = require('../helpers/helpers');
 function createCaptureWindow() {
   //Instancia ventana
   captureWindow = new BrowserWindow({
-    title: "capture",
+    title: 'capture',
     width: 500,
     height: 500,
     show: false,
@@ -30,7 +30,7 @@ function createCaptureWindow() {
   //Usamos hash para indicar la ruta que debe ser ejecutada en el contenido
   //Ojo que en el path.join usamos ".." para llegar correctamente al .html
   let indexPath;
-  if (inDevMode() && process.argv.indexOf('--noDevServer') === -1) {
+  if (process.env.NODE_ENV === 'development') {
     indexPath = url.format({
       protocol: 'http:',
       host: 'localhost:3000',
@@ -42,7 +42,7 @@ function createCaptureWindow() {
     indexPath = url.format({
       protocol: 'file:',
       hash: '/capture',
-      pathname: path.join(__dirname, '..' , '..' ,'dist', 'index.html'),
+      pathname: path.join(__dirname, '..', '..', 'dist', 'index.html'),
       slashes: true,
     });
   }
@@ -52,8 +52,8 @@ function createCaptureWindow() {
   //captureWindow.setBounds(screenList[1].workArea);
 
   //Evita que el nombre de la ventana sea cambiado por React
-  captureWindow.on('page-title-updated', function(e) {
-    e.preventDefault()
+  captureWindow.on('page-title-updated', function (e) {
+    e.preventDefault();
   });
 
   //Carga contenido de ventana
