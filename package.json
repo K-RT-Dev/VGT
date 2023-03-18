@@ -1,10 +1,13 @@
 {
+  "productName":"VGT",
   "main": "main.js",
   "scripts": {
+    "start": "electron .",
     "electron-dev": "concurrently \"webpack serve --config webpack.dev.config.js\"  \"electron .\"",
     "electron-build": "webpack --config webpack.prod.config.js && electron --noDevServer .",
     "webpack-dev": "webpack serve --config webpack.dev.config.js",
-    "webpack-build": "webpack --config webpack.prod.config.js"
+    "webpack-build": "webpack --config webpack.prod.config.js",
+    "package": "electron-packager ./ --out=./release-builds"
   },
   "devDependencies": {
     "@babel/core": "7.21.3",
@@ -14,6 +17,7 @@
     "clean-webpack-plugin": "4.0.0",
     "concurrently": "7.6.0",
     "electron": "15.5.5",
+    "electron-packager": "17.1.1",
     "html-webpack-plugin": "5.5.0",
     "mini-css-extract-plugin": "2.7.5",
     "typescript": "3.9.2",
@@ -23,6 +27,9 @@
   },
   "dependencies": {
     "antd": "5.3.1",
+    "async": "3.2.4",
+    "axios": "1.3.4",
+    "electron-store": "8.1.0",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   }
