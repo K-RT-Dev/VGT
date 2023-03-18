@@ -1,0 +1,29 @@
+{
+  "main": "main.js",
+  "scripts": {
+    "electron-dev": "concurrently \"webpack serve --config webpack.dev.config.js\"  \"electron .\"",
+    "electron-build": "webpack --config webpack.prod.config.js && electron --noDevServer .",
+    "webpack-dev": "webpack serve --config webpack.dev.config.js",
+    "webpack-build": "webpack --config webpack.prod.config.js"
+  },
+  "devDependencies": {
+    "@babel/core": "7.21.3",
+    "@babel/preset-env": "7.20.2",
+    "@babel/preset-react": "7.18.6",
+    "babel-loader": "9.1.2",
+    "clean-webpack-plugin": "4.0.0",
+    "concurrently": "7.6.0",
+    "electron": "15.5.5",
+    "html-webpack-plugin": "5.5.0",
+    "mini-css-extract-plugin": "2.7.5",
+    "typescript": "3.9.2",
+    "webpack": "5.76.2",
+    "webpack-cli": "5.0.1",
+    "webpack-dev-server": "4.13.0"
+  },
+  "dependencies": {
+    "antd": "5.3.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  }
+}
