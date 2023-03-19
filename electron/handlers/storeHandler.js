@@ -15,40 +15,41 @@ const EventEmitter = require('events');
 const items = {};
 const eventEmitter = new EventEmitter();
 
-function cleanAll(){
-  items = {}
+function cleanAll() {
+  items = {};
 }
 
-function deleteItemById(id){
+function deleteItemById(id) {
   delete items[id];
+  eventEmitter.emit('entryDeleted', id);
 }
 
-//Añade un nuevo elemento al store
-function storeNewImg(imgObj) {
-  console.log("Guardando nueva imagen")
+//Añade una nueva entrada
+function addNewEntry(imgObj) {
+  console.log('Guardando nueva imagen');
   imgObj['text'] = null;
   imgObj['trad'] = null;
   items[imgObj.id] = imgObj;
-  eventEmitter.emit('newImgAdded', imgObj);
+  eventEmitter.emit('newEntryAdded', imgObj);
 }
 
 //Añade un texto a una imagen almacenada
 function addTextToImg(textObj) {
-  console.log("Guardando texto detectado")
+  console.log('Guardando texto detectado');
   items[textObj.id]['text'] = textObj.text;
   eventEmitter.emit('newText', textObj);
 }
 
 //Añade la traducción a una imagen y texto almacenado
 function addTraductionToImg(tradObj) {
-  console.log("Guardando texto traducido")
+  console.log('Guardando texto traducido');
   items[tradObj.id]['trad'] = tradObj.trad;
   eventEmitter.emit('newTrad', tradObj);
 }
 
 //Si se añade una nueva imagen, la enviamos a front para añadirla a la lista
 //Luego la añadimos a la lista para su procesamiento en el OCR
-eventEmitter.on('newImgAdded', (imgObj) => {
+eventEmitter.on('newEntryAdded', (imgObj) => {
   //Enviar a la pantalla principal TODO, Optimizar para reducir iteración ?
   BrowserWindow.getAllWindows().forEach((win) => {
     if (win.title === 'Visual-GTP-Translator') {
@@ -83,7 +84,19 @@ eventEmitter.on('newTrad', (tradObj) => {
   });
 });
 
+//Cuando se elimina una entrada
+eventEmitter.on('entryDeleted', (entryId) => {
+  //Enviar a la pantalla principal TODO, Optimizar para reducir iteración ?
+  BrowserWindow.getAllWindows().forEach((win) => {
+    if (win.title === 'Visual-GTP-Translator') {
+      win.webContents.send('entryDeleted', entryId);
+    }
+  });
+});
+
 module.exports = {
-  storeNewImg,
+  addNewEntry,
   addTextToImg,
+  deleteItemById,
+  cleanAll,
 };

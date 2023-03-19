@@ -14,7 +14,7 @@ const AppMenu = () => {
       <Menu
         theme="dark"
         mode="horizontal"
-        onClick={onClick}
+        onClick={(e) => onClick(e)}
         selectedKeys={[current]}
       >
         <Menu.Item key="mode1">

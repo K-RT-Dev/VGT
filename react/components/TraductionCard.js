@@ -1,8 +1,15 @@
+const { ipcRenderer } = require('electron');
 import React from 'react';
 import { Button, Card, Row, Col, Image, Input, Spin, Typography } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 
 const TraductionCard = ({ entry }) => {
+
+  //Al hacer click en el botón de eliminar
+  const onDeleteEntry = (entryId) => {
+    ipcRenderer.send('deleteEntry', entryId);
+  };
+
   return (
     <Card
       bordered={false}
@@ -28,6 +35,7 @@ const TraductionCard = ({ entry }) => {
               danger
               shape="circle"
               size={'small'}
+              onClick={() => onDeleteEntry(entry.id)}
               icon={<DeleteOutlined style={{ fontSize: '14px' }} />}
             />
           </div>
@@ -70,7 +78,13 @@ const TraductionCard = ({ entry }) => {
             }}
           >
             <div style={{ fontWeight: 'bold', fontSize: '12px' }}>
-              Raw text <Typography.Text code style={{fontSize: '10px', verticalAlign: 'text-bottom'}}>(Manga-OCR)</Typography.Text>
+              Raw text{' '}
+              <Typography.Text
+                code
+                style={{ fontSize: '10px', verticalAlign: 'text-bottom' }}
+              >
+                (Manga-OCR)
+              </Typography.Text>
             </div>
             {entry.trad ? (
               <Input.TextArea
@@ -92,7 +106,13 @@ const TraductionCard = ({ entry }) => {
             }}
           >
             <div style={{ fontWeight: 'bold', fontSize: '12px' }}>
-              Translated text <Typography.Text code style={{fontSize: '10px', verticalAlign: 'text-bottom'}}>(GTP)</Typography.Text>
+              Translated text{' '}
+              <Typography.Text
+                code
+                style={{ fontSize: '10px', verticalAlign: 'text-bottom' }}
+              >
+                (GTP)
+              </Typography.Text>
             </div>
             {entry.trad ? (
               <Input.TextArea

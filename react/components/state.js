@@ -21,6 +21,14 @@ export const addNewEntry = (newEntry) => {
   });
 };
 
+export const deleteEntry = (entryId) => {
+  setGlobalState('entries', (oldEntries) => {
+    const newObjAux = { ...oldEntries };
+    delete newObjAux[entryId];
+    return newObjAux;
+  });
+}
+
 export const addText = (newText) => {
   setGlobalState('entries', (oldEntries) => {
     const newObjAux = { ...oldEntries };

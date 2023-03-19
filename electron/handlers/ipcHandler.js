@@ -1,5 +1,5 @@
 const { ipcMain, screen, desktopCapturer, BrowserWindow } = require('electron');
-const { storeNewImg } = require('./storeHandler');
+const { addNewEntry, deleteItemById } = require('./storeHandler');
 const uuid = require('uuid');
 const { getConfigs, saveConfig, resetConfig } = require('../helpers/config');
 
@@ -43,9 +43,15 @@ function ipcHandler() {
   });
 
   /*
+   * Eventos relacionados a acciones en el pane del Mode 1
+   */
+  ipcMain.on('deleteEntry', (_e, entryId) => {
+    deleteItemById(entryId);
+  });
+
+  /*
    * Eventos relacionados al proceso de capturar una imagen de la pantalla
    */
-
   let p1Coords = null;
   let p2Coords = null;
 
@@ -100,7 +106,7 @@ function ipcHandler() {
       //Todo, validar que la img tenga contenido (a veces sale sin info)
 
       //Guardamos la imagen con una ID única
-      storeNewImg({ id: uuid.v4(), img: img });
+      addNewEntry({ id: uuid.v4(), img: img });
     }
     p1Coords = null;
     p2Coords = null;

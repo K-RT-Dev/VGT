@@ -347,7 +347,7 @@ const Config = () => {
             <Button
               type="primary"
               size="middle"
-              onClick={onApplyConfig}
+              onClick={() => onApplyConfig()}
               disabled={!isConfigChanged}
             >
               Aplicar
