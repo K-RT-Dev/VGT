@@ -4,7 +4,7 @@ const { eventsHandler } = require('./electron/handlers/eventsHandler');
 const { ipcHandler } = require('./electron/handlers/ipcHandler');
 const { checkInitialConfig, resetConfig } = require('./electron/helpers/config')
 
-resetConfig();
+//resetConfig();
 checkInitialConfig();
 
 app.on('ready', () => {

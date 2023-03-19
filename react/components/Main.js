@@ -5,6 +5,8 @@ import Mode1 from './Mode1';
 import Config from './Config';
 import Capture from './Capture';
 
+import { GithubOutlined } from '@ant-design/icons';
+
 const Main = () => {
   //El Menu, Footer y el uso de un fondo para el contenido solo lo usamos en caso que la ruta cargada no sea /capture, ya que esa tiene una forma especial de ser aplicada
   //TODO: Mejorar el código respecto a lo anterior
@@ -29,7 +31,8 @@ const Main = () => {
         {window.location.href.includes('/capture') ? null : (
           <div id="footer">
             <div style={{ textAlign: 'center', padding: '4px' }}>
-              Visual-GTP-Translator v0.1
+              <GithubOutlined style={{ marginRight: 5 }} />
+              Github
             </div>
           </div>
         )}

@@ -1,19 +1,49 @@
-const { ipcRenderer } = require('electron');
+const { ipcRenderer, shell } = require('electron');
 import React, { useEffect, useState } from 'react';
 import { Layout } from 'antd';
 import {
   Button,
   Input,
-  Space,
-  Form,
+  Popconfirm,
   Card,
   Radio,
   Spin,
+  Popover,
   Select as SelectAnt,
 } from 'antd';
 
-import { FormOutlined } from '@ant-design/icons';
+import { FormOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { useGlobalState } from './state';
+
+const apiKeyHelp = (
+  <div style={{ maxWidth: '300px' }}>
+    You need to create an account in OpenAI and then generate a Key and put its
+    value here.
+    <br />
+    <a
+      onClick={() =>
+        shell.openExternal('https://platform.openai.com/account/api-keys')
+      }
+    >
+      Follow this link
+    </a>
+  </div>
+);
+
+const basePromptHelp = (
+  <div style={{ maxWidth: '300px' }}>
+    It is the instruction that precedes the text that will be translated by the
+    OpenIA model.
+    <br />
+    <a
+      onClick={() =>
+        shell.openExternal('https://platform.openai.com/docs/guides/completion#:~:text=You%20input%20some%20text%20as,I%20am%22%20with%20high%20probability.')
+      }
+    >
+      More info here
+    </a>
+  </div>
+);
 
 const Config = () => {
   const [config] = useGlobalState('config');
@@ -22,12 +52,15 @@ const Config = () => {
   const [openaiApiKey, setOpenaiApiKey] = useState('');
   const [basePromptOptions, setBasePromptOptions] = useState([]); //Listado de prompt para el dropdown
   const [usePrebuildPrompt, setUsePrebuildPrompt] = useState(true); //True en caso que el valor de "basePrompt" se encuentre en el listado de "basePromptOptions"
-  const [basePrompt, setBasePrompt] = useState('Esta es la prompt por defecto'); //Valor de prompt seleccionado del dropdown
+  const [basePrompt, setBasePrompt] = useState(null); //Valor de prompt seleccionado del dropdown
   const [customBasePrompt, setCustomBasePrompt] = useState(''); //Valor personalizado de prompt
   const [screenshotModifierKey, setScreenshotModifierKey] = useState('CTRL');
   const [screenshotLetterKey, setScreenshotLetterKey] = useState('T');
+  const [isConfigChanged, setIsConfigChange] = useState(false); //Para saber, si respecto a la configuración inicial, se ha realizado algún cambio
+  const [isApiKeyValid, setIsApiKeyValid] = useState(true); //Para controlar un mensaje de feedback en caso que la API Key no sea valida
 
   useEffect(() => {
+    setIsConfigChange(false); //Al cargar una nueva config de main, asumimos que aun no se han realizado cambios
     //Cada vez que cambie la config de main, actualizamos los hooks del componente.
     if (Object.keys(config).length > 0) {
       //No recorremos en caso de que las config aun no las tengamos. Esto sucede en el primer render.
@@ -49,6 +82,45 @@ const Config = () => {
       setLoading(false); //Marcamos que ya tenemos la carga inicial de configuraciones
     }
   }, [config]);
+
+  //Para detectar si se ha realizado un cambio en las configuraciones
+  useEffect(() => {
+    if (!loading) {
+      let changeInForm = false;
+      if (openaiApiKey !== config.openaiApiKey) {
+        changeInForm = true;
+      }
+      if (usePrebuildPrompt) {
+        if (basePrompt !== config.basePrompt) {
+          changeInForm = true;
+        }
+      } else {
+        if (customBasePrompt !== config.basePrompt) {
+          changeInForm = true;
+        }
+      }
+      if (screenshotModifierKey !== config.screenshotModifierKey) {
+        changeInForm = true;
+      }
+      if (screenshotLetterKey !== config.screenshotLetterKey) {
+        changeInForm = true;
+      }
+      setIsConfigChange(changeInForm);
+    }
+  }, [
+    openaiApiKey,
+    screenshotModifierKey,
+    screenshotLetterKey,
+    basePrompt,
+    customBasePrompt,
+  ]);
+
+  //Para remover el mensaje de alerta de API Key incorrecta en caso que se vacié el input
+  useEffect(() => {
+    if (openaiApiKey === '') {
+      setIsApiKeyValid(true);
+    }
+  }, [openaiApiKey]);
 
   const handleUsePrebuildPromptChange = (e) => {
     setUsePrebuildPrompt(e.target.value === 'prebuild');
@@ -75,29 +147,43 @@ const Config = () => {
   };
 
   //Al hacer click en Aplicar
-  const onApplyConfig = () => {
+  const onApplyConfig = async () => {
     //Configuraciones que siempre van a estar seleccionadas
     const config = {
-      openaiApiKey: openaiApiKey,
       screenshotModifierKey: screenshotModifierKey,
     };
 
+    //Validamos de forma asíncrona que la API KEY ingresada sea valida
+    if (openaiApiKey.trim() !== '') {
+      const isValid = await ipcRenderer.invoke('checkApiKey');
+      if (isValid) {
+        setIsApiKeyValid(true);
+        config['openaiApiKey'] = openaiApiKey.trim();
+      } else {
+        setIsApiKeyValid(false);
+        return;
+      }
+    }
+
     //Validamos la letra para capturar screenshots
-    if (screenshotLetterKey !== '') {
-      config['screenshotLetterKey'] = screenshotLetterKey;
+    if (screenshotLetterKey.trim() !== '') {
+      config['screenshotLetterKey'] = screenshotLetterKey.trim();
     } else {
       return;
     }
 
     //Vemos si el usuario selecciono una prompt del listado o una custom
     if (usePrebuildPrompt) {
-      config['basePrompt'] = basePrompt;
+      if (basePrompt) {
+        config['basePrompt'] = basePrompt;
+      } else {
+        return;
+      }
     } else {
       //Nos aseguramos que la custom sea valida
       if (customBasePrompt.trim() !== '') {
         config['basePrompt'] = customBasePrompt.trim();
       } else {
-        console.log('El custom no puede estar vació');
         return;
       }
     }
@@ -109,7 +195,7 @@ const Config = () => {
   const renderApiAlert = () => {
     if (!openaiApiKey || openaiApiKey === '') {
       return (
-        <div style={{ fontSize: '12px', color: 'red' }}>
+        <div style={{ fontSize: '12px', color: '#cc5800' }}>
           The translation cannot be performed without the API KEY
         </div>
       );
@@ -129,6 +215,28 @@ const Config = () => {
   };
 
   const renderCustomBasePromptAlert = () => {
+    if (!customBasePrompt || customBasePrompt === '') {
+      return (
+        <div style={{ fontSize: '12px', color: 'red' }}>
+          You need to define a Prompt
+        </div>
+      );
+    }
+    return;
+  };
+
+  const onResetConfig = async () => {
+    await ipcRenderer.send('resetConfig');
+  };
+
+  const renderWrongApiKeyAlert = () => {
+    if (!isApiKeyValid) {
+      return (
+        <div style={{ fontSize: '12px', color: 'red' }}>
+          The Key is not valid
+        </div>
+      );
+    }
     return;
   };
 
@@ -138,7 +246,10 @@ const Config = () => {
       return (
         <>
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            <div style={{ fontWeight: 'bold', marginRight: 5 }}>
+            <Popover content={apiKeyHelp}>
+              <QuestionCircleOutlined style={{ fontSize: '14px' }} />
+            </Popover>
+            <div style={{ fontWeight: 'bold', marginRight: 5, marginLeft: 5 }}>
               API KEY OpenAI
             </div>
             <div style={{ color: 'red' }}>*</div>
@@ -154,9 +265,13 @@ const Config = () => {
           />
           <br />
           {renderApiAlert()}
+          {renderWrongApiKeyAlert()}
           <br />
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            <div style={{ fontWeight: 'bold', marginRight: 5 }}>
+            <Popover content={basePromptHelp}>
+              <QuestionCircleOutlined style={{ fontSize: '14px' }} />
+            </Popover>
+            <div style={{ fontWeight: 'bold', marginRight: 5, marginLeft: 5 }}>
               Base Prompt
             </div>
           </div>
@@ -164,31 +279,37 @@ const Config = () => {
             onChange={handleUsePrebuildPromptChange}
             value={usePrebuildPrompt ? 'prebuild' : 'custom'}
           >
-            <Radio value="prebuild">Pre-built Base Prompt</Radio>
+            <Radio value="prebuild">Pre-built Prompts</Radio>
             <Radio value="custom">Custom Prompt</Radio>
           </Radio.Group>
           {usePrebuildPrompt ? (
-            <SelectAnt
-              style={{ width: '100%' }}
-              placeholder="Select prompt"
-              value={basePrompt}
-              onChange={handleBasePromptChange}
-            >
-              {basePromptOptions.map((e) => (
-                <SelectAnt.Option key={e} value={e}>
-                  {e}
-                </SelectAnt.Option>
-              ))}
-            </SelectAnt>
+            <>
+              <SelectAnt
+                style={{ width: '100%' }}
+                placeholder="Select prompt"
+                value={basePrompt || basePromptOptions[0]}
+                onChange={handleBasePromptChange}
+              >
+                {basePromptOptions.map((e) => (
+                  <SelectAnt.Option key={e} value={e}>
+                    {e}
+                  </SelectAnt.Option>
+                ))}
+              </SelectAnt>
+              <br />
+            </>
           ) : (
-            <Input.TextArea
-              placeholder="Enter your custom prompt"
-              value={customBasePrompt}
-              onChange={handleCustomBasePromptChange}
-              autoSize={{ minRows: 3, maxRows: 5 }}
-            />
+            <>
+              <Input.TextArea
+                placeholder="Enter your custom prompt"
+                value={customBasePrompt}
+                onChange={handleCustomBasePromptChange}
+                autoSize={{ minRows: 3, maxRows: 5 }}
+              />
+              <br />
+              {renderCustomBasePromptAlert()}
+            </>
           )}
-          <br />
           <br />
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <div style={{ fontWeight: 'bold', marginRight: 5 }}>
@@ -216,16 +337,36 @@ const Config = () => {
           </div>
           {renderScreenshotLetterKeyAlert()}
           <br />
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <Button type="primary" size="middle" onClick={onApplyConfig}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <Button
+              type="primary"
+              size="middle"
+              onClick={onApplyConfig}
+              disabled={!isConfigChanged}
+            >
               Aplicar
             </Button>
+            <Popconfirm
+              title="Reset"
+              description="Are you sure you want to reset the settings?"
+              onConfirm={onResetConfig}
+              okText="Yes"
+              cancelText="No"
+            >
+              <a>Reset to default</a>
+            </Popconfirm>
           </div>
         </>
       );
     } else {
       return (
-        <div>
+        <div style={{ textAlign: 'center' }}>
           <Spin />
         </div>
       );

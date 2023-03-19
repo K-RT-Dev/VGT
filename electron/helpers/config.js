@@ -11,13 +11,13 @@ const Store = require('electron-store');
 const store = new Store();
 
 //Set de configuraciones iniciales
-const defaultPrompt = "Esta es la prompt por defecto"
+const defaultPrompt = "Translate this text from Japanese to English:"
 
 const defaultConfigsValues = {
   basePrompt: defaultPrompt,
   screenshotModifierKey: 'CTRL',
   screenshotLetterKey: 'T',
-  basePromptOptions: [defaultPrompt, 'B', 'C'],
+  basePromptOptions: [defaultPrompt, 'Traduce este testo del Japones al Español:'],
 };
 
 //Realiza una carga inicial de todas las configuraciones cuando se inicia el programa por primera vez.
@@ -101,6 +101,7 @@ function resetConfig() {
     defaultConfigsValues.screenshotModifierKey,
   );
   store.set('screenshotLetterKey', defaultConfigsValues.screenshotLetterKey);
+  store.set('basePromptOptions', defaultConfigsValues.basePromptOptions);
 }
 
 module.exports = {

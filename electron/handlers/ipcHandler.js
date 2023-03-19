@@ -1,11 +1,11 @@
 const { ipcMain, screen, desktopCapturer, BrowserWindow } = require('electron');
 const { storeNewImg } = require('./storeHandler');
 const uuid = require('uuid');
-const { getConfigs, saveConfig } = require('../helpers/config');
+const { getConfigs, saveConfig, resetConfig } = require('../helpers/config');
 
 function ipcHandler() {
   /*
-   * Eventos relacionados al pane de configuraciones
+   * Eventos relacionados al panel de configuraciones
    */
 
   //Cuando react quiere obtener las configuraciones actuales
@@ -13,10 +13,26 @@ function ipcHandler() {
     return getConfigs();
   });
 
+  //Valida que la API KEY ingresada sea correcta
+  ipcMain.handle('checkApiKey', async () => {
+    return false;
+  });
+
   //Cuando react nos entrega un nuevo set de configuraciones
   ipcMain.on('setConfig', (e, values) => {
-
     saveConfig(values); // Guardamos las nuevas configuraciones
+
+    //Emitimos un evento con las configuraciones refrescadas
+    BrowserWindow.getAllWindows().forEach((win) => {
+      if (win.title === 'Visual-GTP-Translator') {
+        win.webContents.send('refreshConfig', getConfigs());
+      }
+    });
+  });
+
+  //Reinicia las configuraciones a por defecto
+  ipcMain.on('resetConfig', async () => {
+    resetConfig();
 
     //Emitimos un evento con las configuraciones refrescadas
     BrowserWindow.getAllWindows().forEach((win) => {
