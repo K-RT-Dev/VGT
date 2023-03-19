@@ -15,7 +15,7 @@ const defaultPrompt = "Translate this text from Japanese to English:"
 
 const defaultConfigsValues = {
   basePrompt: defaultPrompt,
-  screenshotModifierKey: 'CTRL',
+  screenshotModifierKey: 'Ctrl',
   screenshotLetterKey: 'T',
   basePromptOptions: [defaultPrompt, 'Traduce este testo del Japones al Español:'],
 };
@@ -47,7 +47,7 @@ function checkInitialConfig() {
 }
 
 //Recupera todas las configuraciones
-function getConfigs() {
+function getFullConfigs() {
   return {
     openaiApiKey: store.get('openaiApiKey') || '', //Retornamos un string vació en caso de no tener key
     basePrompt: store.get('basePrompt'),
@@ -57,10 +57,26 @@ function getConfigs() {
   };
 }
 
+//Retorna las configuraciones necesarias por el back de Python para realizar sus operaciones
+function getQueryConfig() {
+  return {
+    openaiApiKey: store.get('openaiApiKey') || '', //Retornamos un string vació en caso de no tener key
+    basePrompt: store.get('basePrompt'),
+  };
+}
+
+//Retorna la configuración relacionada a la combinación de teclas para la ejecución de la captura de pantallas
+function getShortcutConfig() {
+  return {
+    screenshotModifierKey: store.get('screenshotModifierKey'),
+    screenshotLetterKey: store.get('screenshotLetterKey'),
+  };
+}
+
 //Guarda nuevas configuraciones
 //Estas deben existir y ser distintas a las actualmente guardadas
 function saveConfig(newConfigs) {
-  const currentsConfigs = getConfigs();
+  const currentsConfigs = getFullConfigs();
 
   //Aceptamos, en caso de la Key, guardar un string vació
   if (newConfigs.openaiApiKey || newConfigs.openaiApiKey === '') {
@@ -106,7 +122,9 @@ function resetConfig() {
 
 module.exports = {
   checkInitialConfig,
-  getConfigs,
+  getFullConfigs,
+  getQueryConfig,
+  getShortcutConfig,
   saveConfig,
   resetConfig,
 };

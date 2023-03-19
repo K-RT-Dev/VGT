@@ -1,7 +1,6 @@
 const path = require('path');
 const url = require('url');
-const { BrowserWindow } = require('electron');
-const { inDevMode } = require('../helpers/helpers');
+const { globalShortcut, BrowserWindow } = require('electron');
 
 //TODO: Forzar focus a esta ventana ?
 function createCaptureWindow() {
@@ -64,12 +63,20 @@ function createCaptureWindow() {
   captureWindow.maximize(); // ?Pasar como propiedad al instancias ventana
 
   //Mostramos la ventana cuando esta todo listo
+  //Creamos un shortcut para cerrar la ventana en caso de usar la tecla Ecs
   captureWindow.once('ready-to-show', () => {
+    globalShortcut.register('Escape', () => {
+      captureWindow.close();
+    });
     captureWindow.show();
   });
 
   //En caso de ser cerrada, eliminamos la ventana
-  captureWindow.on('closed', () => (captureWindow = null));
+  //Nos aseguramos de eliminar el handler de escape usado para esta venta
+  captureWindow.on('closed', () => {
+    captureWindow = null;
+    globalShortcut.unregister('Escape');
+  });
 }
 
 module.exports = {

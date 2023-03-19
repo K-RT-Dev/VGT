@@ -1,6 +1,6 @@
 const { app } = require('electron');
 const { createMainWindow } = require('./electron/windows/winMain');
-const { eventsHandler } = require('./electron/handlers/eventsHandler');
+const { createCaptureWinShortcutHandler } = require('./electron/handlers/shortcutsHandler');
 const { ipcHandler } = require('./electron/handlers/ipcHandler');
 const { checkInitialConfig, resetConfig } = require('./electron/helpers/config')
 
@@ -9,7 +9,7 @@ checkInitialConfig();
 
 app.on('ready', () => {
   createMainWindow();
-  eventsHandler(); //TODO mover a un lugar que asegurar que la ventana main ya este lista y todo este cargado como para poder iniciar capturas
+  createCaptureWinShortcutHandler(); //TODO mover a un lugar que asegurar que la ventana main ya este lista y todo este cargado como para poder iniciar capturas
 });
 
 ipcHandler();

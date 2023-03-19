@@ -1,5 +1,6 @@
 const async = require('async');
 const axios = require('axios');
+const { getQueryConfig } = require('../helpers/config');
 
 const queue = async.queue(function (task) {
   try {
@@ -13,7 +14,7 @@ async function processImg(imgObj, callback) {
   try {
     const res = await axios.post(
       'http://localhost:8000/translateDataUrlImg',
-      { id: imgObj.id, img: imgObj.img },
+      { id: imgObj.id, img: imgObj.img, config: getQueryConfig() },
       {
         headers: {
           'Content-Type': 'application/json',
@@ -33,7 +34,7 @@ async function traductionText(textObj, callback) {
   try {
     const res = await axios.post(
       'http://localhost:8000/translateText',
-      { id: textObj.id, text: textObj.text },
+      { id: textObj.id, text: textObj.text, config: getQueryConfig() },
       {
         headers: {
           'Content-Type': 'application/json',

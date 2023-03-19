@@ -1,7 +1,12 @@
 const { ipcMain, screen, desktopCapturer, BrowserWindow } = require('electron');
 const { addNewEntry, deleteItemById } = require('./storeHandler');
 const uuid = require('uuid');
-const { getConfigs, saveConfig, resetConfig } = require('../helpers/config');
+const {
+  getFullConfigs,
+  saveConfig,
+  resetConfig,
+} = require('../helpers/config');
+const { reloadCaptureWinShortcutHandler } = require('./shortcutsHandler');
 
 function ipcHandler() {
   /*
@@ -10,7 +15,7 @@ function ipcHandler() {
 
   //Cuando react quiere obtener las configuraciones actuales
   ipcMain.handle('getConfig', async () => {
-    return getConfigs();
+    return getFullConfigs();
   });
 
   //Valida que la API KEY ingresada sea correcta
@@ -20,12 +25,21 @@ function ipcHandler() {
 
   //Cuando react nos entrega un nuevo set de configuraciones
   ipcMain.on('setConfig', (e, values) => {
+    const prevConfigs = getFullConfigs();
     saveConfig(values); // Guardamos las nuevas configuraciones
+
+    //En caso de cambiar la config del shortcut para la creación de la ventana de captura, creamos nuevamente el handler de shortcut
+    if (
+      prevConfigs.screenshotLetterKey !== values.screenshotLetterKey ||
+      prevConfigs.screenshotModifierKey !== values.screenshotModifierKey
+    ) {
+      reloadCaptureWinShortcutHandler();
+    }
 
     //Emitimos un evento con las configuraciones refrescadas
     BrowserWindow.getAllWindows().forEach((win) => {
       if (win.title === 'Visual-GTP-Translator') {
-        win.webContents.send('refreshConfig', getConfigs());
+        win.webContents.send('refreshConfig', getFullConfigs());
       }
     });
   });
@@ -34,10 +48,13 @@ function ipcHandler() {
   ipcMain.on('resetConfig', async () => {
     resetConfig();
 
+    //En caso de cambiar la config del shortcut para la creación de la ventana de captura, creamos nuevamente el handler de shortcut
+    reloadCaptureWinShortcutHandler();
+
     //Emitimos un evento con las configuraciones refrescadas
     BrowserWindow.getAllWindows().forEach((win) => {
       if (win.title === 'Visual-GTP-Translator') {
-        win.webContents.send('refreshConfig', getConfigs());
+        win.webContents.send('refreshConfig', getFullConfigs());
       }
     });
   });

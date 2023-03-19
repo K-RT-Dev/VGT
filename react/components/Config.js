@@ -37,7 +37,9 @@ const basePromptHelp = (
     <br />
     <a
       onClick={() =>
-        shell.openExternal('https://platform.openai.com/docs/guides/completion#:~:text=You%20input%20some%20text%20as,I%20am%22%20with%20high%20probability.')
+        shell.openExternal(
+          'https://platform.openai.com/docs/guides/completion#:~:text=You%20input%20some%20text%20as,I%20am%22%20with%20high%20probability.',
+        )
       }
     >
       More info here
@@ -54,7 +56,7 @@ const Config = () => {
   const [usePrebuildPrompt, setUsePrebuildPrompt] = useState(true); //True en caso que el valor de "basePrompt" se encuentre en el listado de "basePromptOptions"
   const [basePrompt, setBasePrompt] = useState(null); //Valor de prompt seleccionado del dropdown
   const [customBasePrompt, setCustomBasePrompt] = useState(''); //Valor personalizado de prompt
-  const [screenshotModifierKey, setScreenshotModifierKey] = useState('CTRL');
+  const [screenshotModifierKey, setScreenshotModifierKey] = useState('Ctrl');
   const [screenshotLetterKey, setScreenshotLetterKey] = useState('T');
   const [isConfigChanged, setIsConfigChange] = useState(false); //Para saber, si respecto a la configuración inicial, se ha realizado algún cambio
   const [isApiKeyValid, setIsApiKeyValid] = useState(true); //Para controlar un mensaje de feedback en caso que la API Key no sea valida
@@ -323,8 +325,8 @@ const Config = () => {
               value={screenshotModifierKey}
               onChange={handleScreenshotModifierChange}
             >
-              <SelectAnt.Option value="CTRL">CTRL</SelectAnt.Option>
-              <SelectAnt.Option value="SHIFT">SHIFT</SelectAnt.Option>
+              <SelectAnt.Option value="Ctrl">CTRL</SelectAnt.Option>
+              <SelectAnt.Option value="Shift">SHIFT</SelectAnt.Option>
             </SelectAnt>
             <div style={{ marginRight: '10px', alignSelf: 'center' }}>+</div>
             <Input
