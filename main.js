@@ -1,10 +1,17 @@
 const { app } = require('electron');
 const { createMainWindow } = require('./electron/windows/winMain');
-const { createCaptureWinShortcutHandler } = require('./electron/handlers/shortcutsHandler');
+const {
+  createCaptureWinShortcutHandler,
+} = require('./electron/handlers/shortcutsHandler');
 const { ipcHandler } = require('./electron/handlers/ipcHandler');
-const { checkInitialConfig, resetConfig } = require('./electron/helpers/config')
+const {
+  checkInitialConfig,
+  resetConfig,
+  resetFirstInit,
+} = require('./electron/helpers/config');
 
 //resetConfig();
+//resetFirstInit();
 checkInitialConfig();
 
 app.on('ready', () => {

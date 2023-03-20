@@ -156,6 +156,7 @@ const Config = () => {
     };
 
     //Validamos de forma asíncrona que la API KEY ingresada sea valida
+    //Si el valor introducido es un string vació, nos saltamos la verificación, ya que puede ser el usuario simplemente eliminando sus credenciales
     if (openaiApiKey.trim() !== '') {
       const isValid = await ipcRenderer.invoke('checkApiKey');
       if (isValid) {
@@ -165,6 +166,9 @@ const Config = () => {
         setIsApiKeyValid(false);
         return;
       }
+    }else{
+      setIsApiKeyValid(true);
+      config['openaiApiKey'] = openaiApiKey.trim();
     }
 
     //Validamos la letra para capturar screenshots

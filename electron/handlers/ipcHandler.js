@@ -5,10 +5,26 @@ const {
   getFullConfigs,
   saveConfig,
   resetConfig,
+  getFirstInitReady,
+  setFirstInitReady
 } = require('../helpers/config');
 const { reloadCaptureWinShortcutHandler } = require('./shortcutsHandler');
 
 function ipcHandler() {
+  /**
+   * Eventos relacionados a la secuencia de inicio
+   */
+
+  //Resuelve la petición de front para saber si el sistema ya paso por el primer inicio
+  ipcMain.handle('getFirstInitReady', async () => {
+    return getFirstInitReady();
+  });
+
+  //Cambiamos el estado del FirstInitReady
+  ipcMain.on('setFirstInitReady', (e, status) => {
+    setFirstInitReady(status);
+  });
+
   /*
    * Eventos relacionados al panel de configuraciones
    */
@@ -20,7 +36,8 @@ function ipcHandler() {
 
   //Valida que la API KEY ingresada sea correcta
   ipcMain.handle('checkApiKey', async () => {
-    return false;
+    //TODO: Consultar a back sobre la validez de la key
+    return true;
   });
 
   //Cuando react nos entrega un nuevo set de configuraciones

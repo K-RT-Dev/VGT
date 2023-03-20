@@ -10,6 +10,7 @@ const initialState = {
     },
   },
   config: {},
+  firstInitReady: true, //Por defecto asumimos que el usuario ya paso por el primer inicio
 };
 const { setGlobalState, useGlobalState } = createGlobalState(initialState);
 
@@ -47,6 +48,10 @@ export const addTrad = (newTrad) => {
 
 export const updateConfig = (config) => {
   setGlobalState('config', config);
+};
+
+export const updateFirstInitReady = (status) => {
+  setGlobalState('firstInitReady', status);
 };
 
 export { useGlobalState };

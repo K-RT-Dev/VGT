@@ -1,23 +1,18 @@
-//Ver si hay configuraciones guardadas
-//Sino no hay aplicar las por defecto y gardarlas
-
-//Habilitar interfaz para leer dichas configuraciones
-//Habilitar interfaz para guardar dicjas configuraciones
-
-//se instalo electron-store
-
 const Store = require('electron-store');
 
 const store = new Store();
 
 //Set de configuraciones iniciales
-const defaultPrompt = "Translate this text from Japanese to English:"
+const defaultPrompt = 'Translate this text from Japanese to English:';
 
 const defaultConfigsValues = {
   basePrompt: defaultPrompt,
   screenshotModifierKey: 'Ctrl',
   screenshotLetterKey: 'T',
-  basePromptOptions: [defaultPrompt, 'Traduce este testo del Japones al Español:'],
+  basePromptOptions: [
+    defaultPrompt,
+    'Traduce este testo del Japones al Español:',
+  ],
 };
 
 //Realiza una carga inicial de todas las configuraciones cuando se inicia el programa por primera vez.
@@ -120,6 +115,21 @@ function resetConfig() {
   store.set('basePromptOptions', defaultConfigsValues.basePromptOptions);
 }
 
+//Reinicia la opción "primer inicio" para pasar por el proceso de primer inicio nuevamente
+function resetFirstInit() {
+  store.set('firstInitReady', false);
+}
+
+//Para marcar el primer inicio como completado
+function setFirstInitReady(status) {
+  store.set('firstInitReady', status);
+}
+
+//Obtenemos el estado del primer inicio
+function getFirstInitReady() {
+  return store.get('firstInitReady') || false;
+}
+
 module.exports = {
   checkInitialConfig,
   getFullConfigs,
@@ -127,4 +137,7 @@ module.exports = {
   getShortcutConfig,
   saveConfig,
   resetConfig,
+  resetFirstInit,
+  setFirstInitReady,
+  getFirstInitReady,
 };

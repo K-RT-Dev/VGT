@@ -1,6 +1,6 @@
 const { globalShortcut, BrowserWindow } = require('electron');
 const { createCaptureWindow } = require('../windows/winCapture');
-const { getShortcutConfig } = require('../helpers/config');
+const { getShortcutConfig, getFirstInitReady } = require('../helpers/config');
 
 
 //Elimina todos los handler y crea un nuevo handler para la ventana de captura
@@ -19,7 +19,6 @@ function reloadCaptureWinShortcutHandler() {
 
 //Crea un nuevo handler para el shortcut que crea la ventana de captura
 function createCaptureWinShortcutHandler() {
-  //TODO, cerrar capturador con ESC en caso de estar sobre el capturador
   //TODO, solo aceptar si estan todas las condiciones para poder efectuar traducciones
 
   const shortcutKeys = getShortcutConfig();
@@ -34,7 +33,8 @@ function createCaptureWinShortcutHandler() {
         captureIsDisplayed = true;
       }
     });
-    if (!captureIsDisplayed) {
+    //Solo creamos la ventana en caso que no exista y que el usuario ya pasara por el primer inicio
+    if (!captureIsDisplayed && getFirstInitReady()) {
       createCaptureWindow();
     }
   });

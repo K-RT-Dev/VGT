@@ -7,6 +7,7 @@ import {
   addTrad,
   updateConfig,
   deleteEntry,
+  updateFirstInitReady,
 } from './state';
 
 //TODO: Tener un sistema para validar si el back esta listo para funcionar
@@ -41,6 +42,13 @@ const App = () => {
       updateConfig(currentConfig);
     }
     syncConfig();
+
+    //Al iniciar vemos si estamos ante el primer inicio del sistema
+    async function getFirstInitReady() {
+      const firstInitReady = await ipcRenderer.invoke('getFirstInitReady');
+      updateFirstInitReady(firstInitReady);
+    }
+    getFirstInitReady();
   }, []);
 
   return <Main />;
