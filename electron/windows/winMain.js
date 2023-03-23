@@ -56,7 +56,6 @@ function createMainWindow() {
   //En caso de ser cerrada, eliminamos la ventana y cerramos el programa
   mainWindow.on('closed', () => {
     mainWindow = null;
-    app.quit();
   });
 }
 

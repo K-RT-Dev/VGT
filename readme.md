@@ -24,12 +24,14 @@ Usando Node 16.19.1
 Solo funciona en Windows
 
 //Instalar repositorios
+cd backend --> poetry shell --> poetry install
 npm install
 
 //Iniciar en dev mode
-npm run electron-dev
+poetry shell --> npm run electron-dev
 
 //Construir release
+cd backend --> pyinstaller mangaOcrApi.spec
 npm run electron-build
 npm run package
 

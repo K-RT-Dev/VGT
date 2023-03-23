@@ -1,3 +1,7 @@
 /node_modules
 /dist
 /release-builds
+
+backend/__pycache__
+backend/build
+backend/dist

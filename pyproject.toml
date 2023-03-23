@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "manga-ocr-fast-api"
+version = "0.1.0"
+description = ""
+authors = ["Federico Jensen Carrasco <federicodaniel25@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = ">=3.9,<3.10"
+manga-ocr = "==0.1.8"
+pyinstaller = "==5.8.0"
+poethepoet = "^0.18.1"
+fastapi = "^0.94.0"
+uvicorn = {extras = ["standard"], version = "^0.21.0"}
+python-multipart = "^0.0.6"
+openai = "^0.27.2"
+psutil = "^5.9.4"
+hypercorn = "0.13.2"
+fastapi-utils = "^0.2.1"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poe.tasks]
+force-cuda11 = "python -m pip install torch==1.12.0+cu116 torchvision==0.13.0+cu116 -f https://download.pytorch.org/whl/torch_stable.html"
+force-remove-cuda11 = "python -m pip uninstall torch torchvision"

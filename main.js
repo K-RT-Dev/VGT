@@ -3,12 +3,16 @@ const { createMainWindow } = require('./electron/windows/winMain');
 const {
   createCaptureWinShortcutHandler,
 } = require('./electron/handlers/shortcutsHandler');
+const { initBackend } = require('./electron/helpers/backendRunner');
 const { ipcHandler } = require('./electron/handlers/ipcHandler');
 const {
   checkInitialConfig,
   resetConfig,
   resetFirstInit,
 } = require('./electron/helpers/config');
+
+//Inicia el backend
+initBackend();
 
 //resetConfig();
 //resetFirstInit();
@@ -29,11 +33,9 @@ app.on('activate', () => {
 });
 */
 
-app.on('window-all-closed', () => {
+//Si cerramos con CTRL+C esto no se ejecuta
+app.on('window-all-closed', async () => {
   if (process.platform !== 'darwin') {
     app.quit();
   }
 });
-
-// Stop error Necesario ??
-//app.allowRendererProcessReuse = true;
