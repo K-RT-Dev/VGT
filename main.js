@@ -26,7 +26,7 @@ ipcHandler();
 
 app.on('ready', () => {
   createMainWindow();
-  //createCaptureWinShortcutHandler(); //TODO mover a un lugar que asegurar que la ventana main ya este lista y todo este cargado como para poder iniciar capturas
+  createCaptureWinShortcutHandler(); //TODO mover a un lugar que asegurar que la ventana main ya este lista y todo este cargado como para poder iniciar capturas
 });
 
 /* Necesario ??

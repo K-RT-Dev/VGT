@@ -8,8 +8,31 @@ import base64
 from huggingface_hub import scan_cache_dir
 import psutil
 import sys
+import multiprocessing
+import os
+import signal
 # import openai
 
+#Proceso encargado de verificar de matar al worker de FastApi en caso que deje de existir electron.exe (o VGT.exe)
+#Este proceso se auto-mata en caso que el proceso padre deje de existir
+#La verificación se realiza cada 2 segundos
+def watcher(parent_pid):
+    while True:
+        info = []
+        parentRunning = False
+        for proc in psutil.process_iter():
+            #TODO: Usar "electron.exe" para dev y "VGT.exe" para prod
+            if proc.name() == "electron.exe" or proc.name() == "VGT.exe":
+                info.append(str(proc))
+            if proc.pid == parent_pid:
+                parentRunning = True
+        if parentRunning is False:
+            raise SystemExit
+        if(len(info) == 0):
+            #Aunque esta instrucción termina el proceso correctamente es considerado un error a nivel asyncio
+            os.kill(parent_pid, signal.SIGTERM)
+            raise SystemExit
+        time.sleep(1)
 
 app = FastAPI()
 
@@ -58,24 +81,24 @@ basePrompt = "traduce esto del japones al ingles y luego dicha traduccion al esp
 
 # --------------------
 
+
+#Vemos si tenemos un argumento de entrada para identificar que queremos correr el backend sin que electron este presente
 standalone = False
 if len(sys.argv) == 2:
     if sys.argv[1] == "standalone":
         standalone = True
 
-#Puede que esta logica no sea necesaria en prod porque el proceso de python queda siempre directamente anclado a VGT.exe
+#Al iniciar FastApi generamos un proceso hijo al cual le pasamos el pid del padre (o sea, este proceso)
+#Este proceso hijo estar encargado de verificar que electron este siendo ejecutado, en caso de no estarlo, este proceso esta encargado de matar el padre (o sea, este proceso)
+#Esta lógica solo se aplica cuando estamos corriendo backend en modo *no* standalone
+#Esta solución se debería aplicar dado el problema de procesos de python huérfanos generados cuando la aplicación principal se cierra en algunas condiciones especiales
+#Estos procesos huérfanos no se terminan y bloquean la capacidad de volver a ejecutar la aplicación
 if standalone is False:
     @app.on_event("startup")
-    @repeat_every(seconds=3)
     def watchElectron():
-        info = []
-        for proc in psutil.process_iter():
-            #TODO: Usar "electron.exe" para dev y "VGT.exe" para prod
-            if proc.name() == "electron.exe" or proc.name() == "VGT.exe":
-                info.append(str(proc))
-        if(len(info) == 0):
-            #TODO: Aunque esta instrucción termina el proceso correctamente es considerado un error a nivel asyncio
-            raise SystemExit
+        parent_pid = os.getpid()
+        bye_process = multiprocessing.Process(target=watcher, args=(parent_pid,))
+        bye_process.start()
 
 
 @app.get("/check")
