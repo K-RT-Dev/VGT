@@ -8,6 +8,7 @@ import {
   updateConfig,
   deleteEntry,
   updateFirstInitReady,
+  updateInitModelSequenceReady,
 } from './state';
 
 //TODO: Tener un sistema para validar si el back esta listo para funcionar
@@ -35,6 +36,19 @@ const App = () => {
     ipcRenderer.on('refreshConfig', (e, config) => {
       updateConfig(config);
     });
+    //Cuando main ha terminado de verificar la carga del modelo nos avisa por este evento que todo esta OK
+    ipcRenderer.on('initModelSequenceReady', (e) => {
+      updateInitModelSequenceReady(true);
+    });
+
+    //Al inicia vemos si main ya ha realizado la comprobación inicial del modelo
+    async function getInitModelSequenceReady() {
+      const initModelSequenceReady = await ipcRenderer.invoke(
+        'getInitModelSequenceReady',
+      );
+      updateInitModelSequenceReady(initModelSequenceReady);
+    }
+    getInitModelSequenceReady();
 
     //Al iniciar nos aseguramos de cargar las configuraciones de main
     async function syncConfig() {

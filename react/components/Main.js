@@ -5,6 +5,7 @@ import Mode1 from './Mode1';
 import Config from './Config';
 import Capture from './Capture';
 import FirstInitModal from './FisrtInitModal';
+import InitModelSequenceModal from './InitModelSequenceModal';
 import { useGlobalState } from './state';
 import { GithubOutlined } from '@ant-design/icons';
 
@@ -13,10 +14,20 @@ const Main = () => {
   //TODO: Mejorar el código respecto a lo anterior
 
   const [firstInitReady] = useGlobalState('firstInitReady');
+  const [initModelSequenceReady] = useGlobalState('initModelSequenceReady');
+
+  // Solo hacer render si la secuencia de comprobación inicial del modelo *no* esta lista
+  const renderInitModelSequenceModal = () => {
+    if (!initModelSequenceReady) {
+      return <InitModelSequenceModal />;
+    }
+    return null;
+  };
 
   // Solo hacer render si no hemos pasado por el firstInit
+  // Esto se aplica solo si ya terminamos de comprobar el modelo en la secuencia inicial
   const renderFirstInitModal = () => {
-    if (!firstInitReady) {
+    if (initModelSequenceReady && !firstInitReady) {
       return <FirstInitModal />;
     }
     return null;
@@ -48,6 +59,7 @@ const Main = () => {
             </div>
           </div>
         )}
+        {renderInitModelSequenceModal()}
         {renderFirstInitModal()}
       </div>
     </HashRouter>

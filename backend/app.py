@@ -15,6 +15,8 @@ app = FastAPI()
 
 mocr = None
 
+#TODO: Si el modelo no esta cargado en memoria por secuencia de hot-reload, recargar
+
 # openai.api_key = "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"
 model_engine = "text-davinci-003"
 basePrompt = "traduce esto del japones al ingles y luego dicha traduccion al español: \n"
@@ -74,6 +76,21 @@ if standalone is False:
         if(len(info) == 0):
             #TODO: Aunque esta instrucción termina el proceso correctamente es considerado un error a nivel asyncio
             raise SystemExit
+
+
+@app.get("/check")
+def check():
+    return "ok"
+
+@app.get("/modelCheck")
+def model_check():
+    hf_cache_info = scan_cache_dir()
+    for repo in hf_cache_info.repos:
+        if repo.repo_id == "kha-white/manga-ocr-base":
+            if len(repo.revisions) > 0:
+                return "inDisk"
+    return "notInDisk"
+
 
 # Inicia el proceso de carga MangaOcr
 @app.post("/loadMangaOCR")

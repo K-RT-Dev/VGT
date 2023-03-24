@@ -15,6 +15,8 @@ import {
 import { FormOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { useGlobalState } from './state';
 
+//TODO: Opción para eliminar el modelo del cache (cerrar programa ?)
+
 const apiKeyHelp = (
   <div style={{ maxWidth: '300px' }}>
     You need to create an account in OpenAI and then generate a Key and put its

@@ -6,11 +6,21 @@ const {
   saveConfig,
   resetConfig,
   getFirstInitReady,
-  setFirstInitReady
+  setFirstInitReady,
+  getInitModelSequenceReady,
 } = require('../helpers/config');
 const { reloadCaptureWinShortcutHandler } = require('./shortcutsHandler');
 
 function ipcHandler() {
+  /**
+   * Eventos relacionados a la verificación inicial del modelo
+   */
+
+  //Resuelve la petición de front para saber si la verificación inicial del modelo ya esta lista
+  ipcMain.handle('getInitModelSequenceReady', async () => {
+    return getInitModelSequenceReady();
+  });
+
   /**
    * Eventos relacionados a la secuencia de inicio
    */

@@ -11,6 +11,7 @@ const initialState = {
   },
   config: {},
   firstInitReady: true, //Por defecto asumimos que el usuario ya paso por el primer inicio
+  initModelSequenceReady: false //Por defecto asumimos que el modelo no esta cargado en disco
 };
 const { setGlobalState, useGlobalState } = createGlobalState(initialState);
 
@@ -52,6 +53,10 @@ export const updateConfig = (config) => {
 
 export const updateFirstInitReady = (status) => {
   setGlobalState('firstInitReady', status);
+};
+
+export const updateInitModelSequenceReady = (status) => {
+  setGlobalState('initModelSequenceReady', status);
 };
 
 export { useGlobalState };

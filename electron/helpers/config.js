@@ -126,8 +126,20 @@ function setFirstInitReady(status) {
 }
 
 //Obtenemos el estado del primer inicio
+//Por defecto el primer inicio aun no se ha realizado (false)
 function getFirstInitReady() {
   return store.get('firstInitReady') || false;
+}
+
+//Para cambiar el estado de la secuencia inicial de verificación del modelo
+function setInitModelSequenceReady(status) {
+  store.set('initModelSequenceReady', status);
+}
+
+//Para obtener el estado de la secuencia inicial de verificación del modelo
+//Por defecto la verificación no ha terminado (false)
+function getInitModelSequenceReady() {
+  return store.get('initModelSequenceReady') || false;
 }
 
 module.exports = {
@@ -140,4 +152,6 @@ module.exports = {
   resetFirstInit,
   setFirstInitReady,
   getFirstInitReady,
+  setInitModelSequenceReady,
+  getInitModelSequenceReady,
 };

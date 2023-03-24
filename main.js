@@ -11,19 +11,23 @@ const {
   resetFirstInit,
 } = require('./electron/helpers/config');
 
-//Inicia el backend
-initBackend();
+const { initModelSequence } = require('./electron/helpers/initModelSequence');
+
 
 //resetConfig();
 //resetFirstInit();
 checkInitialConfig();
 
-app.on('ready', () => {
-  createMainWindow();
-  createCaptureWinShortcutHandler(); //TODO mover a un lugar que asegurar que la ventana main ya este lista y todo este cargado como para poder iniciar capturas
-});
+//Inicia el backend
+initBackend();
+initModelSequence();
 
 ipcHandler();
+
+app.on('ready', () => {
+  createMainWindow();
+  //createCaptureWinShortcutHandler(); //TODO mover a un lugar que asegurar que la ventana main ya este lista y todo este cargado como para poder iniciar capturas
+});
 
 /* Necesario ??
 app.on('activate', () => {
@@ -34,7 +38,7 @@ app.on('activate', () => {
 */
 
 //Si cerramos con CTRL+C esto no se ejecuta
-app.on('window-all-closed', async () => {
+app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
   }

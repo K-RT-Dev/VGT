@@ -1,7 +1,6 @@
 const path = require('path');
 const url = require('url');
-const { app, BrowserWindow } = require('electron');
-const { inDevMode } = require('../helpers/helpers');
+const { BrowserWindow } = require('electron');
 
 function createMainWindow() {
   //Instancia ventana
