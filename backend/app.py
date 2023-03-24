@@ -61,13 +61,15 @@ if len(sys.argv) == 2:
     if sys.argv[1] == "standalone":
         standalone = True
 
+#Puede que esta logica no sea necesaria en prod porque el proceso de python queda siempre directamente anclado a VGT.exe
 if standalone is False:
     @app.on_event("startup")
     @repeat_every(seconds=3)
     def watchElectron():
         info = []
         for proc in psutil.process_iter():
-            if proc.name() == "electron.exe":
+            #TODO: Usar "electron.exe" para dev y "VGT.exe" para prod
+            if proc.name() == "electron.exe" or proc.name() == "VGT.exe":
                 info.append(str(proc))
         if(len(info) == 0):
             #TODO: Aunque esta instrucción termina el proceso correctamente es considerado un error a nivel asyncio
@@ -92,6 +94,7 @@ def test():
     global mocr
     if mocr is None:
         return {"msg": "Manga OCR not Ready"}
+    #TODO: Esta Path es un problme, ya que funciona en dev pero no en prod
     text = mocr('backend/img/00.jpg')
     return {"Test": text}
 

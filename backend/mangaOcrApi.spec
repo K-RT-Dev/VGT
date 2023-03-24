@@ -110,4 +110,3 @@ coll = COLLECT(
     upx_exclude=[],
     name='mangaOcrApi',
 )
-#coll.distpath = '../backendbuild'

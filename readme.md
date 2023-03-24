@@ -34,6 +34,7 @@ poetry shell --> npm run electron-dev
 cd backend --> pyinstaller mangaOcrApi.spec
 npm run electron-build
 npm run package
+Acomodar archivos
 
 
 Base on boilerplate:

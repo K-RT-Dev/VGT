@@ -9,12 +9,10 @@ async function initBackend() {
   if (process.env.NODE_ENV === 'development') {
 
     //Si usamos uvvicorn debemos ejecutar de esta manera python pero debemos ejecutar "poetry shell" manualmente antes de poder trabajar en el proyecto
-    /*
     const pythonProcess = spawn('python', ['./backend/main.py'], {
       stdio: ['pipe', 'pipe', 'pipe'],
       detached: false,
     });
-    */
 
     //Podemos usar poetry aquí si es que se user Hypercorn en el back. Esto asegura que los procesos mueran en los momentos correspondientes
     /*
@@ -29,7 +27,7 @@ async function initBackend() {
     */
     workers.push(pythonProcess);
   } else {
-    const pythonProcess = spawn('./backend/dist/mangaOcrApi/mangaOcrApi.exe', {
+    const pythonProcess = spawn('./backend/mangaOcrApi/mangaOcrApi.exe', {
       stdio: ['pipe', 'pipe', 'pipe'],
       detached: false,
     });
