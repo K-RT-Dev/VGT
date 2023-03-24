@@ -1,5 +1,4 @@
 from fastapi import FastAPI, File, UploadFile, Body, BackgroundTasks
-from fastapi_utils.tasks import repeat_every
 from manga_ocr import MangaOcr
 import io
 from PIL import Image

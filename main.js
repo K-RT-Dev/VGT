@@ -10,23 +10,23 @@ const {
   resetConfig,
   resetFirstInit,
 } = require('./electron/helpers/config');
-
 const { initModelSequence } = require('./electron/helpers/initModelSequence');
-
 
 //resetConfig();
 //resetFirstInit();
-checkInitialConfig();
 
-//Inicia el backend
-initBackend();
-initModelSequence();
+checkInitialConfig(); //Setea las configuraciones iniciales y/o carga las configuraciones guardadas
 
-ipcHandler();
+ipcHandler(); //Inicia los handlers
+
+initBackend(); //Inicia el backend
 
 app.on('ready', () => {
-  createMainWindow();
-  createCaptureWinShortcutHandler(); //TODO mover a un lugar que asegurar que la ventana main ya este lista y todo este cargado como para poder iniciar capturas
+  //Iniciamos la secuencia de carga de modelos del back, cuando estamos listos cargamos la ventana principal
+  initModelSequence().then(() => {
+    createMainWindow();
+    createCaptureWinShortcutHandler();
+  });
 });
 
 /* Necesario ??

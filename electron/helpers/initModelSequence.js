@@ -33,27 +33,51 @@ async function checkModelStatus() {
     if (res.status === 200) {
       //Si esta en disco realizamos el POST pero **sin** await, ya que el proceso de carga en memoria es bien rápido y no queremos repentizar mas al usuario
       if (res.data === 'inDisk') {
-        axios.post(
-          'http://localhost:8000/loadMangaOCR',
-          {},
-          { timeout: 60000 * 1 },
-        );
+        axios
+          .post(
+            'http://localhost:8000/loadMangaOCR',
+            {},
+            { timeout: 60000 * 1 },
+          )
+          .then((res) => {
+            if (res.status !== 200) {
+              process.exit();
+            }
+          });
+        initModelSequenceReady(); //Consideramos el proceso inmediatamente terminado
         return;
-        //En caso que no este en disco, lo descargamos. Aquí si usamos await, ya que es un proceso lento y queremos evitar que el usuario pueda usar el sistema si esto no esta listo
       } else {
-        res = await axios.post(
-          'http://localhost:8000/loadMangaOCR',
-          {},
-          { timeout: 60000 * 5 },
-        );
-        if (res.status === 200) {
-          return;
-        }
+        //En caso que no este en disco, lo descargamos. Aquí si usamos await, ya que es un proceso lento y queremos evitar que el usuario pueda usar el sistema si esto no esta listo
+        axios
+          .post(
+            'http://localhost:8000/loadMangaOCR',
+            {},
+            { timeout: 60000 * 5 },
+          )
+          .then((res) => {
+            if (res.status !== 200) {
+              process.exit();
+            } else {
+              initModelSequenceReady(); //Usamos un .then para terminar el proceso solo cuando la request esta lista
+            }
+          });
+        return;
       }
     }
-  } catch (e) {}
-  console.log('Error con peticiones para cargar modelo inicial');
+  } catch (e) {
+    console.log('Error con peticiones para cargar modelo inicial', e);
+  }
   process.exit();
+}
+
+function initModelSequenceReady() {
+  //Cambiamos esta a secuencia lista y enviamos evento a front
+  setInitModelSequenceReady(true);
+  BrowserWindow.getAllWindows().forEach((win) => {
+    if (win.title === 'Visual-GTP-Translator') {
+      win.webContents.send('initModelSequenceReady');
+    }
+  });
 }
 
 /**
@@ -69,14 +93,6 @@ async function initModelSequence() {
   setInitModelSequenceReady(false); //Marcamos para que front despliegue el Modal de carga inicial
   await checkBackend(); //Comprobamos estado de back
   await checkModelStatus(); //Vemos el estado del modelo en el disco y cargamos si es necesario
-
-  //Cambiamos esta a secuencia lista y enviamos evento a front
-  setInitModelSequenceReady(true);
-  BrowserWindow.getAllWindows().forEach((win) => {
-    if (win.title === 'Visual-GTP-Translator') {
-      win.webContents.send('initModelSequenceReady');
-    }
-  });
 }
 
 module.exports = { initModelSequence };
