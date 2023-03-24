@@ -1,4 +1,7 @@
 const { spawn } = require('cross-spawn');
+const {
+  handleBackendTerminal,
+} = require('../handlers/backendTerminalStreamingHandler');
 
 let workers = [];
 
@@ -7,7 +10,6 @@ let workers = [];
  */
 async function initBackend() {
   if (process.env.NODE_ENV === 'development') {
-
     //Si usamos uvvicorn debemos ejecutar de esta manera python pero debemos ejecutar "poetry shell" manualmente antes de poder trabajar en el proyecto
     const pythonProcess = spawn('python', ['./backend/main.py'], {
       stdio: ['pipe', 'pipe', 'pipe'],
@@ -35,12 +37,15 @@ async function initBackend() {
     workers.push(pythonProcess);
   }
 
-  workers[0].stderr.pipe(process.stdout);
   workers[0].stdout.on('data', (outdata) => {
-    console.log(outdata.toString());
+    const data = outdata.toString();
+    console.log(data);
+    handleBackendTerminal(data); //Pasamos el string de caracteres para ser enviados a front en caso de ser necesario
   });
   workers[0].stderr.on('data', (outdata) => {
-    console.log(outdata.toString());
+    const data = outdata.toString();
+    console.log(data);
+    handleBackendTerminal(data); //Pasamos el string de caracteres para ser enviados a front en caso de ser necesario
   });
   workers[0].on('error', (err) => {
     console.log('on error');

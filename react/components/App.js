@@ -9,6 +9,7 @@ import {
   deleteEntry,
   updateFirstInitReady,
   updateInitModelSequenceReady,
+  updateBackendTerminalStreaming
 } from './state';
 
 //TODO: Tener un sistema para validar si el back esta listo para funcionar
@@ -39,6 +40,10 @@ const App = () => {
     //Cuando main ha terminado de verificar la carga del modelo nos avisa por este evento que todo esta OK
     ipcRenderer.on('initModelSequenceReady', (e) => {
       updateInitModelSequenceReady(true);
+    });
+    //Cuando main nos quiere trasmitir datos de la terminal del backend, nos envía las lineas de texto por aca
+    ipcRenderer.on('backendTerminalStreaming', (e, line) => {
+      updateBackendTerminalStreaming(line);
     });
 
     //Al inicia vemos si main ya ha realizado la comprobación inicial del modelo

@@ -11,7 +11,8 @@ const initialState = {
   },
   config: {},
   firstInitReady: true, //Por defecto asumimos que el usuario ya paso por el primer inicio
-  initModelSequenceReady: false //Por defecto asumimos que el modelo no esta cargado en disco
+  initModelSequenceReady: false, //Por defecto asumimos que el modelo no esta cargado en disco
+  backendTerminalStreaming: [], //Para almacenar un buffer con el output de la terminal del backend
 };
 const { setGlobalState, useGlobalState } = createGlobalState(initialState);
 
@@ -29,7 +30,7 @@ export const deleteEntry = (entryId) => {
     delete newObjAux[entryId];
     return newObjAux;
   });
-}
+};
 
 export const addText = (newText) => {
   setGlobalState('entries', (oldEntries) => {
@@ -57,6 +58,17 @@ export const updateFirstInitReady = (status) => {
 
 export const updateInitModelSequenceReady = (status) => {
   setGlobalState('initModelSequenceReady', status);
+};
+
+export const updateBackendTerminalStreaming = (line) => {
+  setGlobalState('backendTerminalStreaming', (oldEntries) => {
+    const newArrObj = [...oldEntries];
+    if(newArrObj.length > 100){ //Solo almacenamos las ultimas 100 lineas de la terminal
+      newArrObj.shift()
+    }
+    newArrObj.push(line);
+    return newArrObj;
+  });
 };
 
 export { useGlobalState };

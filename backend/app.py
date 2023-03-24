@@ -87,12 +87,13 @@ def model_check():
     hf_cache_info = scan_cache_dir()
     for repo in hf_cache_info.repos:
         if repo.repo_id == "kha-white/manga-ocr-base":
-            if len(repo.revisions) > 0:
+            if len(repo.revisions) > 0 and repo.nb_files >= 6: #Ojo: Especificamos no solo que exista por lo menos una revision, sino que también existan 6 o mas archivos. Esto es en caso de descargas interrumpidas
                 return "inDisk"
     return "notInDisk"
 
 
 # Inicia el proceso de carga MangaOcr
+# Bug conocido: si en dev se interrumpe el proceso de descarga, queda un proceso de python que no permite reiniciar el sistema
 @app.post("/loadMangaOCR")
 def load_manga_ocr():
     print("loadMangaOCR")

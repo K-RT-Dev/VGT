@@ -31,14 +31,21 @@ async function checkModelStatus() {
   try {
     let res = await axios.get('http://localhost:8000/modelCheck'); //TODO: Dejar de usar check para validar estado de back y usar este para reducir tiempo de inicio
     if (res.status === 200) {
-
       //Si esta en disco realizamos el POST pero **sin** await, ya que el proceso de carga en memoria es bien rápido y no queremos repentizar mas al usuario
       if (res.data === 'inDisk') {
-        axios.post('http://localhost:8000/loadMangaOCR');
+        axios.post(
+          'http://localhost:8000/loadMangaOCR',
+          {},
+          { timeout: 60000 * 1 },
+        );
         return;
         //En caso que no este en disco, lo descargamos. Aquí si usamos await, ya que es un proceso lento y queremos evitar que el usuario pueda usar el sistema si esto no esta listo
       } else {
-        res = await axios.post('http://localhost:8000/loadMangaOCR');
+        res = await axios.post(
+          'http://localhost:8000/loadMangaOCR',
+          {},
+          { timeout: 60000 * 5 },
+        );
         if (res.status === 200) {
           return;
         }
@@ -54,8 +61,8 @@ async function checkModelStatus() {
  * La secuencia en primer lugar fija una config para que front despliegue un Modal para avisar y mostrar el estado de comprobación del  modelo
  * Luego la secuencia busca establecer conexión con el back (en caso de fallar reiteradas veces el programa se cierra)
  * Posteriormente se ve si el modelo ya ha sido descargado. En caso de serlo se cambia la config y se emite un evento para que front remueva el Modal
- * En caso contrario el Modal se mantendrá mientras se descarga el modelo 
- * 
+ * En caso contrario el Modal se mantendrá mientras se descarga el modelo
+ *
  * Solo luego de terminar este proceso se podrá acceder a otra funcionalidades como el Modal "primer inicio" y/o el shortcutHandler
  */
 async function initModelSequence() {
