@@ -49,13 +49,13 @@ This process is not yet fully automated. First, we need to compile the server us
 
 1. A graphical interface based on ElectronJs and ReactJs (Javascript). This layer allows interaction with the user and captures images from the screen.
 
-2. A local server based on FastAPI (Python). This performs image analysis for character extraction (OCR) and communication with online services such as the GTP API.
+2. A local server based on FastAPI (Python). This performs image analysis for character extraction (OCR) and communication with online services such as the GPT API.
 
 When ElectronJS is started, it takes care of running the server as a child process.
 
 #### To-do list:
 
-- Allow selecting multiple GTP models.
+- Allow selecting multiple GPT models.
 - Possibility to resort to other translators, such as DeepL.
 - Add options to use other OCRs to detect other languages.
 - Add functionality to support multiple monitors.
@@ -63,8 +63,8 @@ When ElectronJS is started, it takes care of running the server as a child proce
 
 #### Future experiments:
 
-- Use the translation history to improve GTP results. This way, context can be added to the entries to be translated.
-- Use multiple languages as intermediaries to improve GTP results. For example, translate a text to four different languages and then request to combine those results into a final language.
+- Use the translation history to improve GPT results. This way, context can be added to the entries to be translated.
+- Use multiple languages as intermediaries to improve GPT results. For example, translate a text to four different languages and then request to combine those results into a final language.
 - Implement other translators, such as DeepL, Google, and Yandex, to combine multiple translations into a better one.
 
 ##### Base on boilerplate:
