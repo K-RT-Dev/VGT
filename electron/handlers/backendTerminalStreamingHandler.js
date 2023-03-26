@@ -17,7 +17,7 @@ function handleBackendTerminal(data) {
 
     //Enviamos el string a front
     BrowserWindow.getAllWindows().forEach((win) => {
-      if (win.title === 'Visual-GTP-Translator') {
+      if (win.title === 'Visual-GPT-Translator') {
         win.webContents.send('backendTerminalStreaming', aux);
       }
     });

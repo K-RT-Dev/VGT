@@ -52,7 +52,7 @@ function addTraductionToImg(tradObj) {
 eventEmitter.on('newEntryAdded', (imgObj) => {
   //Enviar a la pantalla principal TODO, Optimizar para reducir iteración ?
   BrowserWindow.getAllWindows().forEach((win) => {
-    if (win.title === 'Visual-GTP-Translator') {
+    if (win.title === 'Visual-GPT-Translator') {
       win.webContents.send('newEntry', imgObj);
     }
   });
@@ -65,7 +65,7 @@ eventEmitter.on('newEntryAdded', (imgObj) => {
 eventEmitter.on('newText', (textObj) => {
   //Enviar a la pantalla principal TODO, Optimizar para reducir iteración ?
   BrowserWindow.getAllWindows().forEach((win) => {
-    if (win.title === 'Visual-GTP-Translator') {
+    if (win.title === 'Visual-GPT-Translator') {
       win.webContents.send('addText', textObj);
     }
   });
@@ -78,7 +78,7 @@ eventEmitter.on('newText', (textObj) => {
 eventEmitter.on('newTrad', (tradObj) => {
   //Enviar a la pantalla principal TODO, Optimizar para reducir iteración ?
   BrowserWindow.getAllWindows().forEach((win) => {
-    if (win.title === 'Visual-GTP-Translator') {
+    if (win.title === 'Visual-GPT-Translator') {
       win.webContents.send('addTrad', tradObj);
     }
   });
@@ -88,7 +88,7 @@ eventEmitter.on('newTrad', (tradObj) => {
 eventEmitter.on('entryDeleted', (entryId) => {
   //Enviar a la pantalla principal TODO, Optimizar para reducir iteración ?
   BrowserWindow.getAllWindows().forEach((win) => {
-    if (win.title === 'Visual-GTP-Translator') {
+    if (win.title === 'Visual-GPT-Translator') {
       win.webContents.send('entryDeleted', entryId);
     }
   });

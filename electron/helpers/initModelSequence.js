@@ -74,7 +74,7 @@ function initModelSequenceReady() {
   //Cambiamos esta a secuencia lista y enviamos evento a front
   setInitModelSequenceReady(true);
   BrowserWindow.getAllWindows().forEach((win) => {
-    if (win.title === 'Visual-GTP-Translator') {
+    if (win.title === 'Visual-GPT-Translator') {
       win.webContents.send('initModelSequenceReady');
     }
   });

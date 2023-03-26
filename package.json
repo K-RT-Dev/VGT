@@ -2,7 +2,7 @@
   "name": "VGT",
   "productName": "VGT",
   "version": "0.1",
-  "description": "Tool with a graphical interface for capturing images from the desktop, detecting Japanese characters (OCR), and translating them using GTP",
+  "description": "Tool with a graphical interface for capturing images from the desktop, detecting Japanese characters (OCR), and translating them using GPT",
   "license": "MIT",
   "main": "main.js",
   "scripts": {

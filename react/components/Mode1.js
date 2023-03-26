@@ -34,7 +34,7 @@ const Mode1 = () => {
       {config.openaiApiKey === '' ? (
         <div>
           Remember to <Link to="/config">configure</Link> your OpenIA Api Key to
-          use the translation system of GTP for translation
+          use the translation system of GPT for translation
         </div>
       ) : null}
     </div>

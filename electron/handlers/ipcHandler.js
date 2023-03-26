@@ -65,7 +65,7 @@ function ipcHandler() {
 
     //Emitimos un evento con las configuraciones refrescadas
     BrowserWindow.getAllWindows().forEach((win) => {
-      if (win.title === 'Visual-GTP-Translator') {
+      if (win.title === 'Visual-GPT-Translator') {
         win.webContents.send('refreshConfig', getFullConfigs());
       }
     });
@@ -80,7 +80,7 @@ function ipcHandler() {
 
     //Emitimos un evento con las configuraciones refrescadas
     BrowserWindow.getAllWindows().forEach((win) => {
-      if (win.title === 'Visual-GTP-Translator') {
+      if (win.title === 'Visual-GPT-Translator') {
         win.webContents.send('refreshConfig', getFullConfigs());
       }
     });

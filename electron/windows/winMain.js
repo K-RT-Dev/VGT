@@ -5,7 +5,7 @@ const { BrowserWindow } = require('electron');
 function createMainWindow() {
   //Instancia ventana
   let mainWindow = new BrowserWindow({
-    title: 'Visual-GTP-Translator',
+    title: 'Visual-GPT-Translator',
     width: 1100,
     height: 800,
     show: false,
