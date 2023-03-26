@@ -2,12 +2,15 @@
 
 Program with a graphical interface for taking screenshots and translating Japanese text to another language found in those screenshots. The system uses [Manga-OCR](https://github.com/kha-white/manga-ocr) for detecting Japanese characters in the images, and the [OpenAI API](https://openai.com/blog/openai-api) to utilize the [GPT Models](https://platform.openai.com/docs/models) for translating the text. 
 
+![test](https://github.com/K-RT-Dev/VGT/blob/master/media/c.gif)
+
 There are configurations available to change the image capture shortcut and also the base [prompt](https://platform.openai.com/docs/guides/completion) to use for translation with GPT. The program starts a [FastAPI](https://fastapi.tiangolo.com/) based server for processing images and interfacing with OpenAI. The graphical interface is built using a combination of [ElectronJS](https://www.electronjs.org/) and [ReactJS](https://es.reactjs.org/).
 
 **A compiled .exe version** (using [PyInstaller](https://pyinstaller.org/en/stable/) and [electron-packager](https://github.com/electron/electron-packager)) is provided for quick installation. The installer has an approximate file size of 220Mb. After the program is installed, it automatically downloads the [model](https://huggingface.co/kha-white/manga-ocr-base) used by Manga-OCR for character detection. This model has a file size of 450Mb.
 
 ### Download executable: 
 
+- From: [Github Release](https://github.com/K-RT-Dev/VGT/releases/tag/v0.1)
 - From: [Anonfiles](https://anonfiles.com/vcK9g2h0zd/VGT_win32_x64_zip)
 - From: [Gofile](https://gofile.io/d/pYCkyf)
 
@@ -68,3 +71,6 @@ When ElectronJS is started, it takes care of running the server as a child proce
 - [simple-electron-react](https://github.com/bradtraversy/simple-electron-react)
 - [react-deluge](https://github.com/varyoo/react-deluge/tree/61a7b979f86b35bcca72dfedbb5a1712f356aade)
 - [electron-transparency-demo](https://github.com/toonvanvr/electron-transparency-demo)
+
+##### Media:
+![test](https://github.com/K-RT-Dev/VGT/blob/master/media/a.gif)
