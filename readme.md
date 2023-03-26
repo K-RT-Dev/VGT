@@ -1,4 +1,4 @@
-##Introduction
+## Introduction
 
 Program with a graphical interface for taking screenshots and translating Japanese text to another language found in those screenshots. The system uses [Manga-OCR](https://github.com/kha-white/manga-ocr) for detecting Japanese characters in the images, and the [OpenAI API](https://openai.com/blog/openai-api) to utilize the [GPT Models](https://platform.openai.com/docs/models) for translating the text. 
 
@@ -8,7 +8,7 @@ There are configurations available to change the image capture shortcut and also
 
 Currently, the program only works on Windows.
 
-##Install and execute from code:
+## Install and execute from code:
 
 - Have [Node 16.X](https://nodejs.org/es/download/releases) installed.
 - Have [Python 3.9](https://www.python.org/downloads/release/python-390/) and [Poetry](https://python-poetry.org/) installed.
@@ -18,18 +18,20 @@ Currently, the program only works on Windows.
 3. Install the graphical interface dependencies (frontend) with: `npm install`
 4. Start project in development mode with: `poetry shell` and then `npm run electron-dev`
 
-###Build executables
+### Build executables
 This process is not yet fully automated. First, we need to compile the server using PyInstaller. After that, compile ElectronJS using electron-packager. Finally, combine the results of these two processes in a final folder that we can compress into an installer
 
 1. Run PyInstaller inside the backend directory: `cd backend` then `poetry shell` and then`pyinstaller mangaOcrApi.spec`. This should generate a folder named "dist" with the compiled server.
 2. Build the ReactJS bundle with: `npm run electron-build` and then compile the ElectronJS application with: `npm run package`. This should generate a folder named "release-builds" with the compiled frontend.
 3. Go to "release-builds/VGT-win32-x64" and create a directory named "backend". Copy the folder located at "backend/dist" inside this directory. The "release-builds" folder should look like this:
+```
 --release-builds
 ----backend
 ------mangaOcrApi
+```
 4. We can compress this folder into an installer using WinRaR.
 
-###Limitations:
+### Limitations:
 
 - **Requires an OpenAI API KEY**
 - Only recognizes Japanese characters
@@ -43,7 +45,7 @@ This process is not yet fully automated. First, we need to compile the server us
 
 When ElectronJS is started, it takes care of running the server as a child process.
 
-####To-do list:
+#### To-do list:
 
 - Allow selecting multiple GTP models.
 - Possibility to resort to other translators, such as DeepL.
@@ -51,13 +53,13 @@ When ElectronJS is started, it takes care of running the server as a child proce
 - Add functionality to support multiple monitors.
 - Allow creating pipelines to combine the results of various OCR and/or translators (bagging) to improve the final performance.
 
-####Future experiments:
+#### Future experiments:
 
 - Use the translation history to improve GTP results. This way, context can be added to the entries to be translated.
 - Use multiple languages as intermediaries to improve GTP results. For example, translate a text to four different languages and then request to combine those results into a final language.
 - Implement other translators, such as DeepL, Google, and Yandex, to combine multiple translations into a better one.
 
-#####Base on boilerplate:
-[simple-electron-react](https://github.com/bradtraversy/simple-electron-react)
-[react-deluge](https://github.com/varyoo/react-deluge/tree/61a7b979f86b35bcca72dfedbb5a1712f356aade)
-[electron-transparency-demo](https://github.com/toonvanvr/electron-transparency-demo)
+##### Base on boilerplate:
+- [simple-electron-react](https://github.com/bradtraversy/simple-electron-react)
+- [react-deluge](https://github.com/varyoo/react-deluge/tree/61a7b979f86b35bcca72dfedbb5a1712f356aade)
+- [electron-transparency-demo](https://github.com/toonvanvr/electron-transparency-demo)
