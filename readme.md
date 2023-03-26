@@ -6,8 +6,10 @@ There are configurations available to change the image capture shortcut and also
 
 **A compiled .exe version** (using [PyInstaller](https://pyinstaller.org/en/stable/) and [electron-packager](https://github.com/electron/electron-packager)) is provided for quick installation. The installer has an approximate file size of 220Mb. After the program is installed, it automatically downloads the [model](https://huggingface.co/kha-white/manga-ocr-base) used by Manga-OCR for character detection. This model has a file size of 450Mb.
 
-- Download executable version from [Anonfiles](https://anonfiles.com/vcK9g2h0zd/VGT_win32_x64_zip)
-- Download executable version from [Gofile](https://gofile.io/d/pYCkyf)
+### Download executable: 
+
+- From: [Anonfiles](https://anonfiles.com/vcK9g2h0zd/VGT_win32_x64_zip)
+- From: [Gofile](https://gofile.io/d/pYCkyf)
 
 Currently, the program only works on Windows.
 
