@@ -266,8 +266,8 @@ const Config = () => {
             placeholder="API KEY"
             value={openaiApiKey}
             onChange={handleOpenaiApiKeyChange}
-            maxLength={50}
-            style={{ maxWidth: 300 }}
+            maxLength={60}
+            style={{ maxWidth: 450 }}
             suffix={<FormOutlined />}
             required
           />

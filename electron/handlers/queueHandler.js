@@ -22,6 +22,9 @@ async function processImg(imgObj, callback) {
       },
     );
     text = res.data.text;
+    if(text === ""){
+      text = "NULL";
+    }
   } catch (e) {
     console.log(e);
   }
@@ -31,6 +34,7 @@ async function processImg(imgObj, callback) {
 async function traductionText(textObj, callback) {
   //Enviamos el texto raw a nuestro back de Python para que traduzca
   let trad = 'Error';
+
   try {
     const res = await axios.post(
       'http://localhost:8000/translateText',
@@ -42,9 +46,13 @@ async function traductionText(textObj, callback) {
       },
     );
     trad = res.data.trad;
+    if(trad === ""){
+      trad = "NULL";
+    }
   } catch (e) {
     console.log(e);
   }
+
   callback({ id: textObj.id, trad: trad });
 }
 
