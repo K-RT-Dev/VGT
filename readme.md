@@ -42,7 +42,7 @@ This process is not yet fully automated. First, we need to compile the server us
 - Only recognizes Japanese characters
 - Only works on Windows
 
-####The system is divided into 2 parts:
+#### The system is divided into 2 parts:
 
 1. A graphical interface based on ElectronJs and ReactJs (Javascript). This layer allows interaction with the user and captures images from the screen.
 
