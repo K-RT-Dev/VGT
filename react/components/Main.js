@@ -1,3 +1,4 @@
+const { shell } = require('electron');
 import React from 'react';
 import { Route, Routes, HashRouter } from 'react-router-dom';
 import AppMenu from './AppMenu';
@@ -54,8 +55,15 @@ const Main = () => {
         {window.location.href.includes('/capture') ? null : (
           <div id="footer">
             <div style={{ textAlign: 'center', padding: '4px' }}>
-              <GithubOutlined style={{ marginRight: 5 }} />
-              Github
+              <a
+                style={{cursor: "pointer"}}
+                onClick={() =>
+                  shell.openExternal('https://github.com/K-RT-Dev/VGT')
+                }
+              >
+                <GithubOutlined style={{ marginRight: 5 }} />
+                Github
+              </a>
             </div>
           </div>
         )}

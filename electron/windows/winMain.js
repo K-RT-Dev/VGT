@@ -9,6 +9,7 @@ function createMainWindow() {
     width: 1100,
     height: 800,
     show: false,
+    autoHideMenuBar: true,
     //transparent: true, //OJO
     //frame: false, //OJO
     icon: `${__dirname}/../assets/ghost.png`,
