@@ -10,6 +10,7 @@ There are configurations available to change the image capture shortcut and also
 
 ### Download executable: 
 
+- From: [Github Release](https://github.com/K-RT-Dev/VGT/releases/tag/v0.1)
 - From: [Anonfiles](https://anonfiles.com/vcK9g2h0zd/VGT_win32_x64_zip)
 - From: [Gofile](https://gofile.io/d/pYCkyf)
 
