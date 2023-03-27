@@ -6,10 +6,10 @@ const store = new Store();
 const defaultPrompt = 'Translate this text from Japanese to English:';
 
 const defaultOpenAiModel = {
-  name: 'Davinci 003',
-  fullname: 'text-davinci-003',
-  mode: 'completion',
-  abbreviation: 'Dav-3'
+  name: 'GPT 3.5 Turbo 0301',
+  fullname: 'gpt-3.5-turbo-0301',
+  mode: 'chat',
+  abbreviation: 'GPT-3.5-Tur',
 };
 
 const defaultConfigsValues = {
@@ -23,10 +23,10 @@ const defaultConfigsValues = {
   openIaModels: [
     defaultOpenAiModel,
     {
-      name: 'GPT 3.5 Turbo 0301',
-      fullname: 'gpt-3.5-turbo-0301',
-      mode: 'chat',
-      abbreviation: 'GPT-3.5-Tur'
+      name: 'Davinci 003',
+      fullname: 'text-davinci-003',
+      mode: 'completion',
+      abbreviation: 'Dav-3',
     },
   ],
   selectedOpenAiModel: defaultOpenAiModel.fullname,
@@ -157,7 +157,9 @@ function resetConfig() {
 
 //Retorna las propiedades del modelo de OpenAi seleccionado
 function getSelectedOpenAiModelProprieties() {
-  return store.get('openIaModels').find((e) => e.fullname === store.get('selectedOpenAiModel'));
+  return store
+    .get('openIaModels')
+    .find((e) => e.fullname === store.get('selectedOpenAiModel'));
 }
 
 //Reinicia la opción "primer inicio" para pasar por el proceso de primer inicio nuevamente
@@ -199,5 +201,5 @@ module.exports = {
   getFirstInitReady,
   setInitModelSequenceReady,
   getInitModelSequenceReady,
-  getSelectedOpenAiModelProprieties
+  getSelectedOpenAiModelProprieties,
 };
