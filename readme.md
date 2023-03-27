@@ -55,8 +55,8 @@ When ElectronJS is started, it takes care of running the server as a child proce
 
 #### To-do list:
 
-- Allow selecting multiple GPT models.
-- Possibility to resort to other translators, such as DeepL.
+- Allow selecting multiple GPT models [OK].
+- Ability to use another type of translator, such as DeepL.
 - Add options to use other OCRs to detect other languages.
 - Add functionality to support multiple monitors.
 - Allow creating pipelines to combine the results of various OCR and/or translators (bagging) to improve the final performance.
