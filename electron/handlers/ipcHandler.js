@@ -8,6 +8,7 @@ const {
   getFirstInitReady,
   setFirstInitReady,
   getInitModelSequenceReady,
+  getSelectedOpenAiModelProprieties
 } = require('../helpers/config');
 const { reloadCaptureWinShortcutHandler } = require('./shortcutsHandler');
 
@@ -149,8 +150,12 @@ function ipcHandler() {
       const img = sources[0].thumbnail.crop(captureRectZone).toDataURL();
       //Todo, validar que la img tenga contenido (a veces sale sin info)
 
-      //Guardamos la imagen con una ID única
-      addNewEntry({ id: uuid.v4(), img: img });
+      //Guardamos la imagen con una ID única y adjuntamos el modelo seleccionado al momento de realizar la captura
+      addNewEntry({
+        id: uuid.v4(),
+        img: img,
+        selectedModel: getSelectedOpenAiModelProprieties(),
+      });
     }
     p1Coords = null;
     p2Coords = null;

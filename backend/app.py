@@ -16,6 +16,8 @@ import json
 # Proceso encargado de verificar de matar al worker de FastApi en caso que deje de existir electron.exe (o VGT.exe)
 # Este proceso se auto-mata en caso que el proceso padre deje de existir
 # La verificación se realiza cada 2 segundos
+
+
 def watcher(parent_pid):
     while True:
         info = []
@@ -38,7 +40,6 @@ def watcher(parent_pid):
 app = FastAPI()
 
 mocr = None
-model_engine = "text-davinci-003"
 
 # Vemos si tenemos un argumento de entrada para identificar que queremos correr el backend sin que electron este presente
 standalone = False
@@ -105,17 +106,34 @@ async def translate_text(data: dict):
     if data["config"]["openaiApiKey"] == '':
         return {"id": data["id"], "trad": ""}
     else:
-        openai.api_key = data["config"]["openaiApiKey"]
-        completion = openai.Completion.create(
-            engine=model_engine,
-            prompt=data["config"]["basePrompt"] + '"' + data["text"] + '"',
-            max_tokens=200,
-            temperature=0.3,
-            top_p=1,
-            frequency_penalty=0,
-            presence_penalty=0
-        )
-        return {"id": data["id"], "trad": completion.choices[0].text.strip()}
+        if data["config"]["selectedOpenAiModel"]["fullname"] == "text-davinci-003":
+            openai.api_key = data["config"]["openaiApiKey"]
+            completion = openai.Completion.create(
+                engine="text-davinci-003",
+                prompt=data["config"]["basePrompt"] + '"' + data["text"] + '"',
+                max_tokens=200,
+                temperature=0.3,
+                top_p=1,
+                frequency_penalty=0,
+                presence_penalty=0
+            )
+            return {"id": data["id"], "trad": completion.choices[0].text.strip()}
+        elif data["config"]["selectedOpenAiModel"]["fullname"] == "gpt-3.5-turbo-0301":
+            openai.api_key = data["config"]["openaiApiKey"]
+            chat = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo-0301",
+                messages=[{"role": "user", "content": data["config"]
+                           ["basePrompt"] + '"' + data["text"] + '"'}],
+                # max_tokens=200,
+                # temperature=0.3,
+                # top_p=1,
+                # frequency_penalty=0,
+                # presence_penalty=0
+            )
+            return {"id": data["id"], "trad": chat.choices[0].message.content.strip()}
+
+        else:
+            return {"id": data["id"], "trad": ""}
 
 # Nos retorna una texto detectado de una imagen de muestra mediante el uso de Manga OCR
 

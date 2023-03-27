@@ -9,7 +9,7 @@ import {
   deleteEntry,
   updateFirstInitReady,
   updateInitModelSequenceReady,
-  updateBackendTerminalStreaming
+  updateBackendTerminalStreaming,
 } from './state';
 
 //TODO: Tener un sistema para validar si el back esta listo para funcionar

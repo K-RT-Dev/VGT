@@ -9,6 +9,7 @@ const EventEmitter = require('events');
  *      img: "", --> Imagen en DataURL Base64
  *      text: "", --> Texto detectado
  *      trad: "" --> Texto traducido
+ *      selectedModel: {} --> Configuraciones del Modelo seleccionado al momento de la captura
  * }
  */
 

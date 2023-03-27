@@ -5,6 +5,13 @@ const store = new Store();
 //Set de configuraciones iniciales
 const defaultPrompt = 'Translate this text from Japanese to English:';
 
+const defaultOpenAiModel = {
+  name: 'Davinci 003',
+  fullname: 'text-davinci-003',
+  mode: 'completion',
+  abbreviation: 'Dav-3'
+};
+
 const defaultConfigsValues = {
   basePrompt: defaultPrompt,
   screenshotModifierKey: 'Ctrl',
@@ -13,6 +20,16 @@ const defaultConfigsValues = {
     defaultPrompt,
     'Traduce este testo del Japones al Español:',
   ],
+  openIaModels: [
+    defaultOpenAiModel,
+    {
+      name: 'GPT 3.5 Turbo 0301',
+      fullname: 'gpt-3.5-turbo-0301',
+      mode: 'chat',
+      abbreviation: 'GPT-3.5-Tur'
+    },
+  ],
+  selectedOpenAiModel: defaultOpenAiModel.fullname,
 };
 
 //Realiza una carga inicial de todas las configuraciones cuando se inicia el programa por primera vez.
@@ -39,6 +56,16 @@ function checkInitialConfig() {
   if (!basePromptOptions) {
     store.set('basePromptOptions', defaultConfigsValues.basePromptOptions);
   }
+
+  const openIaModels = store.get('openIaModels');
+  if (!openIaModels) {
+    store.set('openIaModels', defaultConfigsValues.openIaModels);
+  }
+
+  const selectedOpenAiModel = store.get('selectedOpenAiModel');
+  if (!selectedOpenAiModel) {
+    store.set('selectedOpenAiModel', defaultConfigsValues.selectedOpenAiModel);
+  }
 }
 
 //Recupera todas las configuraciones
@@ -49,6 +76,8 @@ function getFullConfigs() {
     screenshotModifierKey: store.get('screenshotModifierKey'),
     screenshotLetterKey: store.get('screenshotLetterKey'),
     basePromptOptions: store.get('basePromptOptions'),
+    openIaModels: store.get('openIaModels'),
+    selectedOpenAiModel: store.get('selectedOpenAiModel'),
   };
 }
 
@@ -57,6 +86,7 @@ function getQueryConfig() {
   return {
     openaiApiKey: store.get('openaiApiKey') || '', //Retornamos un string vació en caso de no tener key
     basePrompt: store.get('basePrompt'),
+    selectedOpenAiModel: getSelectedOpenAiModelProprieties(), //Retorna las configuraciones completas del modelo seleccionado
   };
 }
 
@@ -101,6 +131,14 @@ function saveConfig(newConfigs) {
       store.set('screenshotLetterKey', newConfigs.screenshotLetterKey);
     }
   }
+
+  if (newConfigs.selectedOpenAiModel) {
+    if (
+      newConfigs.selectedOpenAiModel !== currentsConfigs.selectedOpenAiModel
+    ) {
+      store.set('selectedOpenAiModel', newConfigs.selectedOpenAiModel);
+    }
+  }
 }
 
 //Reinicia las configuraciones a las guardadas por defecto
@@ -113,6 +151,13 @@ function resetConfig() {
   );
   store.set('screenshotLetterKey', defaultConfigsValues.screenshotLetterKey);
   store.set('basePromptOptions', defaultConfigsValues.basePromptOptions);
+  store.set('openIaModels', defaultConfigsValues.openIaModels);
+  store.set('selectedOpenAiModel', defaultConfigsValues.selectedOpenAiModel);
+}
+
+//Retorna las propiedades del modelo de OpenAi seleccionado
+function getSelectedOpenAiModelProprieties() {
+  return store.get('openIaModels').find((e) => e.fullname === store.get('selectedOpenAiModel'));
 }
 
 //Reinicia la opción "primer inicio" para pasar por el proceso de primer inicio nuevamente
@@ -154,4 +199,5 @@ module.exports = {
   getFirstInitReady,
   setInitModelSequenceReady,
   getInitModelSequenceReady,
+  getSelectedOpenAiModelProprieties
 };

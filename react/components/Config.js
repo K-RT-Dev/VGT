@@ -35,7 +35,7 @@ const apiKeyHelp = (
 const basePromptHelp = (
   <div style={{ maxWidth: '300px' }}>
     It is the instruction that precedes the text that will be translated by the
-    OpenIA model.
+    OpenAI model.
     <br />
     <a
       onClick={() =>
@@ -62,6 +62,8 @@ const Config = () => {
   const [screenshotLetterKey, setScreenshotLetterKey] = useState('T');
   const [isConfigChanged, setIsConfigChange] = useState(false); //Para saber, si respecto a la configuración inicial, se ha realizado algún cambio
   const [isApiKeyValid, setIsApiKeyValid] = useState(true); //Para controlar un mensaje de feedback en caso que la API Key no sea valida
+  const [openIaModels, setOpenAiModels] = useState([]); //Lista de modelos de OpenAi disponibles para el dropdown
+  const [selectedOpenAiModel, setSelectedOpenAiModel] = useState(); //Modelo seleccionado del dropdown de modelos de OpenAi
 
   useEffect(() => {
     setIsConfigChange(false); //Al cargar una nueva config de main, asumimos que aun no se han realizado cambios
@@ -70,7 +72,6 @@ const Config = () => {
       //No recorremos en caso de que las config aun no las tengamos. Esto sucede en el primer render.
       setOpenaiApiKey(config.openaiApiKey);
       setBasePromptOptions(config.basePromptOptions);
-
       //Para ver si tenemos guardado un customPrompt o algo del listado basePromptOptions
       if (config.basePromptOptions?.includes(config.basePrompt)) {
         setUsePrebuildPrompt(true);
@@ -79,9 +80,10 @@ const Config = () => {
         setUsePrebuildPrompt(false);
         setCustomBasePrompt(config.basePrompt);
       }
-
       setScreenshotModifierKey(config.screenshotModifierKey);
       setScreenshotLetterKey(config.screenshotLetterKey);
+      setOpenAiModels(config.openIaModels);
+      setSelectedOpenAiModel(config.selectedOpenAiModel);
 
       setLoading(false); //Marcamos que ya tenemos la carga inicial de configuraciones
     }
@@ -109,6 +111,9 @@ const Config = () => {
       if (screenshotLetterKey !== config.screenshotLetterKey) {
         changeInForm = true;
       }
+      if (selectedOpenAiModel !== config.selectedOpenAiModel) {
+        changeInForm = true;
+      }
       setIsConfigChange(changeInForm);
     }
   }, [
@@ -117,6 +122,7 @@ const Config = () => {
     screenshotLetterKey,
     basePrompt,
     customBasePrompt,
+    selectedOpenAiModel
   ]);
 
   //Para remover el mensaje de alerta de API Key incorrecta en caso que se vacié el input
@@ -150,11 +156,16 @@ const Config = () => {
     setScreenshotLetterKey(event.target.value.toUpperCase());
   };
 
+  const handleSelectedOpenAiModelChange = (value) => {
+    setSelectedOpenAiModel(value);
+  };
+
   //Al hacer click en Aplicar
   const onApplyConfig = async () => {
     //Configuraciones que siempre van a estar seleccionadas
     const config = {
       screenshotModifierKey: screenshotModifierKey,
+      selectedOpenAiModel: selectedOpenAiModel,
     };
 
     //Validamos de forma asíncrona que la API KEY ingresada sea valida
@@ -168,7 +179,7 @@ const Config = () => {
         setIsApiKeyValid(false);
         return;
       }
-    }else{
+    } else {
       setIsApiKeyValid(true);
       config['openaiApiKey'] = openaiApiKey.trim();
     }
@@ -274,6 +285,21 @@ const Config = () => {
           <br />
           {renderApiAlert()}
           {renderWrongApiKeyAlert()}
+          <br />
+          <div style={{ fontWeight: 'bold' }}>OpenAI Model</div>
+          <SelectAnt
+            style={{ width: '300px' }}
+            placeholder="Select Model"
+            value={selectedOpenAiModel || openIaModels[0].name}
+            onChange={handleSelectedOpenAiModelChange}
+          >
+            {openIaModels.map((e) => (
+              <SelectAnt.Option key={e.fullname} value={e.fullname}>
+                {e.name}
+              </SelectAnt.Option>
+            ))}
+          </SelectAnt>
+          <br />
           <br />
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <Popover content={basePromptHelp}>

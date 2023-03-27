@@ -111,7 +111,7 @@ const TraductionCard = ({ entry }) => {
                 code
                 style={{ fontSize: '10px', verticalAlign: 'text-bottom' }}
               >
-                (GPT)
+                {entry.selectedModel.abbreviation}
               </Typography.Text>
             </div>
             {entry.trad ? (
