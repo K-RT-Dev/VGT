@@ -87,7 +87,7 @@ const FirstInitModal = () => {
         placeholder="API KEY"
         value={openaiApiKey}
         onChange={handleOpenaiApiKeyChange}
-        maxLength={50}
+        maxLength={51}
         style={{ maxWidth: 300 }}
         suffix={<FormOutlined />}
         required
