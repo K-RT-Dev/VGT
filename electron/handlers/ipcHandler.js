@@ -135,9 +135,9 @@ function ipcHandler() {
 
       //calcula el tamaño completo de la pantalla  //TODO: Optimizar para siempre tener actualizado dado el monitor. Debe ser cambiado si el monitor cambia o su scale factor
       const screenDetails = screen.getPrimaryDisplay();
-      const screenWidth = screenDetails.size.width * screenDetails.scaleFactor;
+      const screenWidth = Math.floor(screenDetails.size.width * screenDetails.scaleFactor);
       const screenHeight =
-        screenDetails.size.height * screenDetails.scaleFactor;
+        Math.floor(screenDetails.size.height * screenDetails.scaleFactor);
 
       //Tomar la imagen de  la pantalla
       const sources = await desktopCapturer.getSources({
