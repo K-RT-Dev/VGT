@@ -1,3 +1,13 @@
+## This project is no longer maintained
+
+Due to time constraints, I am forced to abandon this project. I believe it is an excellent proof of concept. With the advancements in AI over the past few years, I have no doubt that similar projects will continue to be developed. Everyone is welcome to fork the code and create their own implementations. The following tasks are necessary:
+
+- Update the use of the OpenAI API to support the latest models.
+- Fix minor bugs related to the length of the OpenAI API Key.
+- Add support for multiple monitors.
+
+I believe this project can be a valuable contribution by demonstrating how to integrate Manga-OCR, a front-end with ElectronJS, a back-end with FastAPI, and the ability to package everything into an easy-to-use .exe.
+
 ## Introduction
 
 Program with a graphical interface for taking screenshots and translating Japanese text to another language found in those screenshots. The system uses [Manga-OCR](https://github.com/kha-white/manga-ocr) for detecting Japanese characters in the images, and the [OpenAI API](https://openai.com/blog/openai-api) to utilize the [GPT Models](https://platform.openai.com/docs/models) for translating the text. 
